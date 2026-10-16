@@ -1,0 +1,13 @@
+{
+  "name": "helix-design",
+  "version": "0.1.0",
+  "description": "Pantheon visual language for the Helix umbrella: design tokens and framework-agnostic CSS components.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node scripts/check.js",
+    "build": "node scripts/build && node scripts/build-report-theme"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

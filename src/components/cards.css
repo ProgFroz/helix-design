@@ -1,0 +1,85 @@
+/* Cards: flat panel surfaces. Square, 1px line, optional eyebrow / title / meta. */
+.card {
+  position: relative;
+  display: block;
+  min-width: 0;
+  padding: var(--space-5) var(--space-4);
+  background: var(--panel);
+  border: var(--border-width) solid var(--line);
+  border-radius: var(--radius-none);
+  color: var(--ivory);
+}
+.card--accent { border-color: var(--line-gold); }
+.card--raised {
+  background: var(--panel-alt);
+  border-color: var(--line-gold);
+  box-shadow: var(--shadow-edge-hi-soft), var(--shadow-drop);
+}
+
+.card--interactive {
+  width: 100%;
+  font: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+@media (hover: hover) {
+  .card--interactive:hover { border-color: var(--gold-deep); }
+}
+.card--interactive.is-hover { border-color: var(--gold-deep); }
+.card--interactive:is(:active, .is-pressed) {
+  background: var(--gold-wash);
+  border-color: var(--gold);
+  transform: translateY(1px);
+}
+.card:is(.is-selected, [aria-current='page'], [aria-selected='true']) {
+  border-color: var(--gold);
+  box-shadow: inset 2px 0 0 var(--gold);
+}
+.card--interactive:is(:disabled, [aria-disabled='true']) {
+  color: var(--fg-disabled);
+  border-color: var(--line);
+  background: var(--panel);
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* rare highlight: meander frieze on top (at most one per screen) */
+.card--ornament { padding-top: 40px; }
+.card--ornament::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: var(--space-4);
+  width: 84px;
+  height: 11px;
+  background: var(--meander) 0 0 / auto 100% repeat-x;
+  opacity: 0.8;
+}
+
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+.card__title {
+  margin: 0;
+  font-size: var(--fs-title);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--ivory);
+}
+.card__meta {
+  margin: var(--space-1) 0 0;
+  font-size: var(--fs-small);
+  color: var(--muted);
+}
+.card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}

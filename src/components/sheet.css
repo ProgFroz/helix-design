@@ -1,0 +1,96 @@
+/* Bottom sheet, dialog and scrim.
+   Use a native <dialog class="sheet|dialog"> (showModal(); ::backdrop is the scrim) or a plain
+   element toggled with the [hidden] attribute next to a .scrim element. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-scrim);
+  background: var(--scrim);
+}
+
+.sheet,
+.dialog {
+  color: var(--ivory);
+  background: var(--panel);
+  border-radius: var(--radius-none);
+}
+
+.sheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: var(--z-sheet);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: none;
+  max-height: 92vh;
+  margin: 0;
+  padding: 10px var(--gutter) calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  border: 0;
+  border-top: var(--border-width) solid var(--gold);
+  box-shadow: var(--shadow-sheet);
+}
+.sheet--full { top: 36px; height: auto; max-height: none; }
+.sheet__handle {
+  flex: none;
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 14px;
+  background: var(--line-gold);
+}
+.sheet__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.sheet__title { margin: var(--space-1) 0 0; font-size: 1.25rem; }
+.sheet__body { flex: 1; min-height: 0; overflow-y: auto; }
+.sheet__foot {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+  margin-top: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--border-width) solid var(--line);
+}
+
+.dialog {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-dialog);
+  width: min(calc(100% - 2 * var(--gutter)), 480px);
+  height: fit-content;
+  max-height: calc(100vh - 2 * var(--gutter));
+  margin: auto;
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  overflow: auto;
+  border: var(--border-width) solid var(--line-gold);
+  border-top-color: var(--gold);
+  box-shadow: var(--shadow-float);
+}
+.dialog__title { margin: var(--space-1) 0 var(--space-3); font-size: var(--fs-h2); }
+.dialog__body { color: var(--muted); line-height: 1.55; }
+.dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+}
+
+dialog.sheet:not([open]),
+dialog.dialog:not([open]),
+.sheet[hidden],
+.dialog[hidden],
+.scrim[hidden] { display: none; }
+dialog.sheet::backdrop,
+dialog.dialog::backdrop { background: var(--scrim); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .sheet:not([hidden]) { animation: helix-sheet-in var(--dur-slow) var(--ease); }
+  .dialog:not([hidden]) { animation: helix-fade-in var(--dur) var(--ease); }
+}
+@keyframes helix-sheet-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes helix-fade-in { from { opacity: 0; } to { opacity: 1; } }

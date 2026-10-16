@@ -1,0 +1,86 @@
+/* Inputs: .field wraps label, control, hint and error. .input styles input, select and textarea. */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field__label {
+  font-size: var(--fs-head);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.field__hint,
+.field__error {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--muted);
+}
+.field__error { color: var(--warn); }
+
+.input {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  margin: 0;
+  padding: 0 var(--space-3);
+  background: var(--panel-alt);
+  border: var(--border-width) solid var(--line);
+  border-radius: var(--radius-none);
+  color: var(--ivory);
+  font: inherit;
+  font-size: 1rem;
+  transition: border-color var(--dur) var(--ease);
+}
+.input::placeholder { color: var(--muted); opacity: 0.75; }
+@media (hover: hover) {
+  .input:hover { border-color: var(--line-gold); }
+}
+.input:focus,
+.input.is-focus { border-color: var(--gold); }
+
+textarea.input {
+  min-height: calc(var(--tap) * 2);
+  padding: var(--space-3);
+  line-height: 1.5;
+  resize: vertical;
+}
+.input[type='number'] { font-variant-numeric: tabular-nums lining-nums; }
+
+.input[aria-invalid='true'],
+.field.is-invalid .input { border-color: var(--bad-line); }
+.input[aria-invalid='true']:focus,
+.field.is-invalid .input:focus { border-color: var(--bad); }
+
+.input:disabled,
+.input.is-disabled {
+  background: var(--stone);
+  border-color: var(--line);
+  color: var(--fg-disabled);
+  cursor: not-allowed;
+}
+.field.is-disabled .field__label { color: var(--fg-disabled); }
+
+/* select: wrap the <select class="input"> in .select for the chevron */
+.select { position: relative; display: block; }
+.select > .input { padding-right: 40px; cursor: pointer; }
+.select::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--gold);
+  border-bottom: 1.5px solid var(--gold);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+.select:has(> .input:disabled)::after { border-color: var(--fg-disabled); }
+select.input option { background: var(--panel); color: var(--ivory); }

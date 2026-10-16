@@ -1,0 +1,8 @@
+/* Focus ring: gold-bright, 2px, offset 2px, keyboard focus only.
+   .is-focus renders the same ring statically (demos, screenshots). */
+:focus-visible,
+.is-focus {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+:focus:not(:focus-visible) { outline: none; }

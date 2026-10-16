@@ -8,7 +8,6 @@
     "url": "git+https://github.com/ProgFroz/helix-design.git"
   },
   "style": "./dist/helix-design.css",
-  "main": "./src/switcher.js",
   "exports": {
     ".": "./dist/helix-design.css",
     "./css": "./dist/helix-design.css",

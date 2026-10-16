@@ -1,6 +1,6 @@
-/* Square stepper: two square buttons (.btn.btn--secondary.btn--square.btn--lg) around a value.
+/* Square stepper: two square buttons (.hx-btn.hx-btn--secondary.hx-btn--square.hx-btn--lg) around a value.
    The buttons follow the active data-btn variant; disable one at the bound. */
-.stepper-label {
+.hx-stepper-label {
   display: flex;
   justify-content: space-between;
   gap: var(--space-3);
@@ -12,14 +12,14 @@
   color: var(--muted);
 }
 
-.stepper {
+.hx-stepper {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: start;
   gap: var(--space-2);
 }
 
-.stepper__value {
+.hx-stepper__value {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,11 +35,11 @@
   color: var(--gold-bright);
   font-variant-numeric: tabular-nums lining-nums;
 }
-.stepper__value small {
+.hx-stepper__value small {
   font-size: 0.8rem;
   font-weight: 400;
   color: var(--muted);
 }
 
-.stepper.is-invalid .stepper__value { border-color: var(--bad-line); color: var(--warn); }
-.stepper.is-disabled .stepper__value { color: var(--fg-disabled); box-shadow: none; }
+.hx-stepper.hx-is-invalid .hx-stepper__value { border-color: var(--bad-line); color: var(--warn); }
+.hx-stepper.hx-is-disabled .hx-stepper__value { color: var(--fg-disabled); box-shadow: none; }

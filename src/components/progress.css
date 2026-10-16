@@ -1,6 +1,6 @@
 /* Progress: CSS-only ring and bars driven by the component-local --value (0-100).
    Set it inline: style="--value: 42", and mirror it in aria-valuenow. */
-.progress-ring {
+.hx-progress-ring {
   --value: 0;
   --ring-size: 132px;
   --ring-width: 10px;
@@ -11,7 +11,7 @@
   width: var(--ring-size);
   height: var(--ring-size);
 }
-.progress-ring::before {
+.hx-progress-ring::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -20,13 +20,13 @@
   -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-width)), #000 calc(100% - var(--ring-width) + 1px));
   mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-width)), #000 calc(100% - var(--ring-width) + 1px));
 }
-.progress-ring--sm { --ring-size: 64px; --ring-width: 6px; }
-.progress-ring--idle::before { background: conic-gradient(var(--gold-deep) calc(var(--value) * 1%), var(--panel-alt) 0); }
-.progress-ring--over::before { background: conic-gradient(var(--warn) calc(var(--value) * 1%), var(--panel-alt) 0); }
-.progress-ring__label { position: relative; display: grid; justify-items: center; text-align: center; }
-.progress-ring__label strong { font-size: 1.75rem; font-weight: 500; line-height: 1; color: var(--gold-bright); }
-.progress-ring--sm .progress-ring__label strong { font-size: 0.9rem; }
-.progress-ring__label span {
+.hx-progress-ring--sm { --ring-size: 64px; --ring-width: 6px; }
+.hx-progress-ring--idle::before { background: conic-gradient(var(--gold-deep) calc(var(--value) * 1%), var(--panel-alt) 0); }
+.hx-progress-ring--over::before { background: conic-gradient(var(--warn) calc(var(--value) * 1%), var(--panel-alt) 0); }
+.hx-progress-ring__label { position: relative; display: grid; justify-items: center; text-align: center; }
+.hx-progress-ring__label strong { font-size: 1.75rem; font-weight: 500; line-height: 1; color: var(--gold-bright); }
+.hx-progress-ring--sm .hx-progress-ring__label strong { font-size: 0.9rem; }
+.hx-progress-ring__label span {
   margin-top: var(--space-1);
   font-size: 0.66rem;
   letter-spacing: 0.12em;
@@ -34,7 +34,7 @@
   color: var(--muted);
 }
 
-.progress-head {
+.hx-progress-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -43,7 +43,7 @@
   font-size: 0.78rem;
   color: var(--muted);
 }
-.progress-bar {
+.hx-progress-bar {
   --value: 0;
   position: relative;
   height: 8px;
@@ -51,7 +51,7 @@
   background: var(--panel-alt);
   border: var(--border-width) solid var(--line);
 }
-.progress-bar::before {
+.hx-progress-bar::before {
   content: '';
   position: absolute;
   inset: 0 auto 0 0;
@@ -60,12 +60,12 @@
   background: var(--gold-deep);
   transition: width var(--dur-slow) var(--ease);
 }
-.progress-bar--high::before { background: var(--gold); }
-.progress-bar--over::before { background: var(--warn); }
-.progress-bar--thin { height: 3px; border: 0; }
+.hx-progress-bar--high::before { background: var(--gold); }
+.hx-progress-bar--over::before { background: var(--warn); }
+.hx-progress-bar--thin { height: 3px; border: 0; }
 
 /* step progress: one segment per step */
-.progress-steps { display: flex; gap: 3px; }
-.progress-steps > * { flex: 1; height: 3px; background: var(--line); }
-.progress-steps > .is-done { background: var(--gold-deep); }
-.progress-steps > .is-current { background: var(--gold); }
+.hx-progress-steps { display: flex; gap: 3px; }
+.hx-progress-steps > * { flex: 1; height: 3px; background: var(--line); }
+.hx-progress-steps > .hx-is-done { background: var(--gold-deep); }
+.hx-progress-steps > .hx-is-current { background: var(--gold); }

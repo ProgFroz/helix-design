@@ -552,11 +552,11 @@ check('10. every class selector in the library CSS starts with hx-', () => {
     }
   }
   assert.deepEqual([...new Set(bad)], []);
-  // the demo only uses classes the library defines (plus its own demo-* layout classes)
+  // the demo only uses classes the library defines (plus its own demo, demo-* layout classes)
   const defined = new Set(styleRules(parseCss(read('dist/helix-design.css'))).flatMap((r) => selectorClasses(r.selector)));
   const demo = read('demo/index.html');
   const used = new Set([...demo.matchAll(/\sclass="([^"]*)"/g)].flatMap((m) => m[1].split(/\s+/).filter(Boolean)));
-  assert.deepEqual([...used].filter((c) => !c.startsWith('demo-') && !defined.has(c)), [], 'demo uses undefined classes');
+  assert.deepEqual([...used].filter((c) => !/^demo(-|$)/.test(c) && !defined.has(c)), [], 'demo uses undefined classes');
 });
 
 check('11. helix-design.css sets no global element style; element rules live in helix-base.css', () => {

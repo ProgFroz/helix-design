@@ -7,23 +7,25 @@
 <!-- optional: apply the stored button variant before first paint (no flash of variant E) -->
 <script>try{var b=localStorage.getItem('helix-design.btn');if(/^[abce]$/.test(b))document.documentElement.dataset.btn=b}catch(e){}</script>
 <link rel="stylesheet" href="../dist/helix-design.css">
+<!-- opt-in element base (html, body, headings, links, focus ring); the components work without it -->
+<link rel="stylesheet" href="../dist/helix-base.css">
 <script src="../src/switcher.js"></script>
 <style>
   /* demo page layout only; not part of the library */
   .demo { max-width: 1180px; margin: 0 auto; padding: var(--space-7) var(--gutter) 120px; }
   .demo-head { padding-bottom: var(--space-6); border-bottom: 1px solid var(--line); margin-bottom: var(--space-6); }
-  .demo-head .ornament { width: min(100%, 320px); margin-top: var(--space-4); }
+  .demo-head .hx-ornament { width: min(100%, 320px); margin-top: var(--space-4); }
   .demo-section { padding: var(--space-7) 0; border-top: 1px solid var(--line-gold); scroll-margin-top: var(--space-4); }
   .demo-section > h2 { margin-bottom: var(--space-2); }
-  .demo-section > p.muted { max-width: 760px; font-size: 0.86rem; margin-bottom: var(--space-5); }
+  .demo-section > p.hx-muted { max-width: 760px; font-size: 0.86rem; margin-bottom: var(--space-5); }
   .demo-toc { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); margin: var(--space-4) 0 0; padding: 0; list-style: none; font-size: 0.8rem; }
   .demo-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: flex-start; margin-bottom: var(--space-4); }
   .demo-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
   .demo-label { display: block; margin: var(--space-5) 0 var(--space-2); }
   .demo-note { font-size: 0.75rem; color: var(--muted); margin: var(--space-2) 0 0; }
   .demo-matrix { display: grid; grid-template-columns: 90px repeat(4, minmax(120px, 1fr)); gap: var(--space-3) var(--space-3); align-items: start; max-width: 860px; }
-  .demo-matrix .caps { align-self: center; }
-  .demo-matrix > .btn { min-width: 0; }
+  .demo-matrix .hx-caps { align-self: center; }
+  .demo-matrix > .hx-btn { min-width: 0; }
   .demo-narrow { max-width: 390px; }
   .demo-swatch { border: 1px solid var(--line); background: var(--panel); }
   .demo-swatch i { display: block; height: 56px; border-bottom: 1px solid var(--line); }
@@ -37,29 +39,29 @@
   .demo-shadow { width: 120px; height: 64px; background: var(--panel-alt); border: 1px solid var(--line); display: grid; place-items: center; font-size: 0.7rem; color: var(--muted); }
   /* framed stages: fixed-position components are pinned to the frame, not the viewport */
   .demo-stage { position: relative; overflow: hidden; border: 1px solid var(--line-gold); background: var(--stone); }
-  .demo-stage :is(.bottom-nav, .fab, .scrim, .sheet, .dialog, .toast-region) { position: absolute; }
-  .demo-stage .app-shell { min-height: 0; height: 100%; }
-  .demo-stage .side-nav { height: 100%; position: static; }
+  .demo-stage :is(.hx-bottom-nav, .hx-fab, .hx-scrim, .hx-sheet, .hx-dialog, .hx-toast-region) { position: absolute; }
+  .demo-stage .hx-app-shell { min-height: 0; height: 100%; }
+  .demo-stage .hx-side-nav { height: 100%; position: static; }
   .demo-stage--mobile { width: 390px; max-width: 100%; height: 560px; }
-  .demo-stage--mobile .app-shell { display: block; }
-  .demo-stage--mobile .side-nav { display: none; }
-  .demo-stage--mobile .bottom-nav { display: grid; }
-  .demo-stage--mobile .app-shell__main { padding: var(--space-5) var(--gutter) calc(var(--bnav-h) + var(--space-5)); }
-  .demo-stage--mobile .fab { right: var(--gutter); bottom: calc(var(--bnav-h) + var(--space-4)); }
+  .demo-stage--mobile .hx-app-shell { display: block; }
+  .demo-stage--mobile .hx-side-nav { display: none; }
+  .demo-stage--mobile .hx-bottom-nav { display: grid; }
+  .demo-stage--mobile .hx-app-shell__main { padding: var(--space-5) var(--gutter) calc(var(--bnav-h) + var(--space-5)); }
+  .demo-stage--mobile .hx-fab { right: var(--gutter); bottom: calc(var(--bnav-h) + var(--space-4)); }
   .demo-stage--desktop { width: 1120px; height: 520px; }
-  .demo-stage--desktop .app-shell { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
-  .demo-stage--desktop .side-nav { display: flex; }
-  .demo-stage--desktop .bottom-nav { display: none; }
-  .demo-stage--desktop .app-shell__main { padding: var(--space-7) var(--space-7); }
+  .demo-stage--desktop .hx-app-shell { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
+  .demo-stage--desktop .hx-side-nav { display: flex; }
+  .demo-stage--desktop .hx-bottom-nav { display: none; }
+  .demo-stage--desktop .hx-app-shell__main { padding: var(--space-7) var(--space-7); }
   .demo-scroll { overflow-x: auto; padding-bottom: var(--space-2); }
   .demo-stage--sheet { width: 390px; max-width: 100%; height: 520px; }
   .demo-stage--dialog { width: 520px; max-width: 100%; height: 360px; }
   .demo-stage--toast { width: 390px; max-width: 100%; height: 220px; }
-  .demo-stage--toast .toast-region { bottom: var(--space-4); left: var(--gutter); right: var(--gutter); width: auto; }
-  .demo-stage .dialog { width: min(calc(100% - 2 * var(--gutter)), 440px); }
+  .demo-stage--toast .hx-toast-region { bottom: var(--space-4); left: var(--gutter); right: var(--gutter); width: auto; }
+  .demo-stage .hx-dialog { width: min(calc(100% - 2 * var(--gutter)), 440px); }
   .demo-sticky { position: sticky; top: 0; z-index: var(--z-sticky); background: var(--stone); border-bottom: 1px solid var(--line-gold); }
   .demo-sticky .demo { padding-top: var(--space-3); padding-bottom: var(--space-3); display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
-  .demo-sticky .segmented { flex: 0 1 420px; }
+  .demo-sticky .hx-segmented { flex: 0 1 420px; }
   .demo-sticky p { margin: 0; font-size: 0.75rem; color: var(--muted); flex: 1 1 240px; }
 </style>
 </head>
@@ -79,12 +81,12 @@
 
 <div class="demo-sticky" id="switcher">
   <div class="demo">
-    <span class="eyebrow" style="margin:0">Button variant</span>
-    <div class="segmented" role="group" aria-label="Button variant">
-      <button type="button" class="segmented__item" data-btn-switch="a">A · Plinth</button>
-      <button type="button" class="segmented__item" data-btn-switch="b">B · Inscription</button>
-      <button type="button" class="segmented__item" data-btn-switch="c">C · Faceted</button>
-      <button type="button" class="segmented__item" data-btn-switch="e">E · Facet + plinth</button>
+    <span class="hx-eyebrow" style="margin:0">Button variant</span>
+    <div class="hx-segmented" role="group" aria-label="Button variant">
+      <button type="button" class="hx-segmented__item" data-btn-switch="a">A · Plinth</button>
+      <button type="button" class="hx-segmented__item" data-btn-switch="b">B · Inscription</button>
+      <button type="button" class="hx-segmented__item" data-btn-switch="c">C · Faceted</button>
+      <button type="button" class="hx-segmented__item" data-btn-switch="e">E · Facet + plinth</button>
     </div>
     <p>Sets <code>&lt;html data-btn&gt;</code> and persists in <code>localStorage["helix-design.btn"]</code>. Default without a choice: E.</p>
   </div>
@@ -92,10 +94,10 @@
 
 <main class="demo">
   <header class="demo-head">
-    <span class="eyebrow">helix-design v0.1.0</span>
+    <span class="hx-eyebrow">helix-design v0.1.0</span>
     <h1>Component gallery</h1>
-    <p class="lede">Tokens and framework-agnostic components of the Pantheon visual language. Static page; every state is shown side by side. Placeholder copy only.</p>
-    <span class="ornament" aria-hidden="true"></span>
+    <p class="hx-lede">Tokens and framework-agnostic components of the Pantheon visual language. Static page; every state is shown side by side. Placeholder copy only.</p>
+    <span class="hx-ornament" aria-hidden="true"></span>
     <ul class="demo-toc">
       <li><a href="#tokens">Tokens</a></li><li><a href="#typography">Typography</a></li><li><a href="#focus">Focus</a></li>
       <li><a href="#buttons">Buttons</a></li><li><a href="#stepper">Stepper</a></li><li><a href="#inputs">Inputs</a></li>
@@ -107,11 +109,11 @@
 
   <!-- ===================== TOKENS ===================== -->
   <section class="demo-section" id="tokens" aria-labelledby="h-tokens">
-    <span class="eyebrow">01 / Tokens</span>
+    <span class="hx-eyebrow">01 / Tokens</span>
     <h2 id="h-tokens">Tokens</h2>
-    <p class="muted">All values live in <code>src/tokens.css</code>; the full table with sources and renames is in TOKENS.md.</p>
+    <p class="hx-muted">All values live in <code>src/tokens.css</code>; the full table with sources and renames is in TOKENS.md.</p>
 
-    <span class="demo-label caps">Colour</span>
+    <span class="demo-label hx-caps">Colour</span>
     <div class="demo-grid" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))">
       <div class="demo-swatch"><i style="background:var(--stone)"></i><div>Stone<code>--stone</code></div></div>
       <div class="demo-swatch"><i style="background:var(--panel)"></i><div>Panel<code>--panel</code></div></div>
@@ -134,28 +136,28 @@
       <div class="demo-swatch"><i style="background:var(--warn)"></i><div>Warn<code>--warn</code></div></div>
     </div>
 
-    <span class="demo-label caps">Spacing</span>
+    <span class="demo-label hx-caps">Spacing</span>
     <div class="demo-scale">
-      <code>--space-1</code><span class="muted">4px</span><i style="width:var(--space-1)"></i>
-      <code>--space-2</code><span class="muted">8px</span><i style="width:var(--space-2)"></i>
-      <code>--space-3</code><span class="muted">12px</span><i style="width:var(--space-3)"></i>
-      <code>--space-4</code><span class="muted">16px</span><i style="width:var(--space-4)"></i>
-      <code>--space-5</code><span class="muted">20px</span><i style="width:var(--space-5)"></i>
-      <code>--space-6</code><span class="muted">24px</span><i style="width:var(--space-6)"></i>
-      <code>--space-7</code><span class="muted">32px</span><i style="width:var(--space-7)"></i>
-      <code>--space-8</code><span class="muted">44px</span><i style="width:var(--space-8)"></i>
-      <code>--gutter</code><span class="muted">18px</span><i style="width:var(--gutter)"></i>
-      <code>--tap</code><span class="muted">48px</span><i style="width:var(--tap)"></i>
-      <code>--fab-size</code><span class="muted">56px</span><i style="width:var(--fab-size)"></i>
-      <code>--tap-xl</code><span class="muted">64px</span><i style="width:var(--tap-xl)"></i>
+      <code>--space-1</code><span class="hx-muted">4px</span><i style="width:var(--space-1)"></i>
+      <code>--space-2</code><span class="hx-muted">8px</span><i style="width:var(--space-2)"></i>
+      <code>--space-3</code><span class="hx-muted">12px</span><i style="width:var(--space-3)"></i>
+      <code>--space-4</code><span class="hx-muted">16px</span><i style="width:var(--space-4)"></i>
+      <code>--space-5</code><span class="hx-muted">20px</span><i style="width:var(--space-5)"></i>
+      <code>--space-6</code><span class="hx-muted">24px</span><i style="width:var(--space-6)"></i>
+      <code>--space-7</code><span class="hx-muted">32px</span><i style="width:var(--space-7)"></i>
+      <code>--space-8</code><span class="hx-muted">44px</span><i style="width:var(--space-8)"></i>
+      <code>--gutter</code><span class="hx-muted">18px</span><i style="width:var(--gutter)"></i>
+      <code>--tap</code><span class="hx-muted">48px</span><i style="width:var(--tap)"></i>
+      <code>--fab-size</code><span class="hx-muted">56px</span><i style="width:var(--fab-size)"></i>
+      <code>--tap-xl</code><span class="hx-muted">64px</span><i style="width:var(--tap-xl)"></i>
     </div>
 
-    <span class="demo-label caps">Type scale</span>
+    <span class="demo-label hx-caps">Type scale</span>
     <table class="demo-table">
       <thead><tr><th>Token</th><th>Value</th><th>Sample</th></tr></thead>
       <tbody>
-        <tr><td><code>--fs-micro</code></td><td>0.66rem</td><td><span class="eyebrow" style="margin:0">Eyebrow label</span></td></tr>
-        <tr><td><code>--fs-head</code></td><td>0.62rem</td><td><span class="caps">Column head</span></td></tr>
+        <tr><td><code>--fs-micro</code></td><td>0.66rem</td><td><span class="hx-eyebrow" style="margin:0">Eyebrow label</span></td></tr>
+        <tr><td><code>--fs-head</code></td><td>0.62rem</td><td><span class="hx-caps">Column head</span></td></tr>
         <tr><td><code>--fs-small</code></td><td>0.75rem</td><td style="font-size:var(--fs-small)">Meta line text</td></tr>
         <tr><td><code>--fs-body</code></td><td>0.9375rem</td><td style="font-size:var(--fs-body)">Body copy sample</td></tr>
         <tr><td><code>--fs-title</code></td><td>1.0625rem</td><td style="font-size:var(--fs-title)">Card title</td></tr>
@@ -163,11 +165,11 @@
         <tr><td><code>--fs-h3</code> / <code>--fs-h3-lg</code></td><td>1.125rem / 1.5rem</td><td style="font-size:var(--fs-h3)">Heading three</td></tr>
         <tr><td><code>--fs-h2</code> / <code>--fs-h2-lg</code></td><td>1.375rem / 1.85rem</td><td style="font-size:var(--fs-h2)">Heading two</td></tr>
         <tr><td><code>--fs-h1</code> / <code>--fs-h1-lg</code></td><td>1.875rem / clamp(2.8rem, 4.6vw, 4.6rem)</td><td style="font-size:var(--fs-h1)">Heading one</td></tr>
-        <tr><td><code>--fs-value</code></td><td>2.25rem</td><td><span class="readout num">1,234<small>units</small></span></td></tr>
+        <tr><td><code>--fs-value</code></td><td>2.25rem</td><td><span class="hx-readout hx-num">1,234<small>units</small></span></td></tr>
       </tbody>
     </table>
 
-    <span class="demo-label caps">Radius and shadow</span>
+    <span class="demo-label hx-caps">Radius and shadow</span>
     <div class="demo-row">
       <div class="demo-shadow" style="border-radius:var(--radius-none)">--radius-none</div>
       <div class="demo-shadow" style="border-radius:var(--radius-round);width:64px">round</div>
@@ -178,7 +180,7 @@
       <div class="demo-shadow" style="box-shadow:var(--shadow-inset)">--shadow-inset</div>
     </div>
 
-    <span class="demo-label caps">Motion and z-index</span>
+    <span class="demo-label hx-caps">Motion and z-index</span>
     <table class="demo-table">
       <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
       <tbody>
@@ -200,135 +202,135 @@
 
   <!-- ===================== TYPOGRAPHY ===================== -->
   <section class="demo-section" id="typography" aria-labelledby="h-type">
-    <span class="eyebrow">02 / Typography</span>
+    <span class="hx-eyebrow">02 / Typography</span>
     <h2 id="h-type">Typography</h2>
-    <p class="muted">DM Sans throughout (Pantheon). Mobile sizes first; headings switch to the Pantheon desktop sizes from 1100px.</p>
-    <span class="eyebrow">Eyebrow · section label</span>
+    <p class="hx-muted">DM Sans throughout (Pantheon). Mobile sizes first; headings switch to the Pantheon desktop sizes from 1100px.</p>
+    <span class="hx-eyebrow">Eyebrow · section label</span>
     <h1>Heading one</h1>
     <h2>Heading two</h2>
     <h3>Heading three</h3>
     <h4>Heading four</h4>
-    <p class="lede">Lede paragraph: a short introduction in muted text with a relaxed line height.</p>
-    <p>Body paragraph with <strong>strong text</strong>, <em>emphasis in gold</em>, <a href="#typography">a link</a> and <code>inline code</code>.</p>
-    <p class="muted">Muted secondary text for supporting information.</p>
-    <p><span class="caps">Column head</span> · <span class="count">03 / 12</span> · <span class="num">1,234.50</span> (tabular numerals) · <span class="sr-only">Screen-reader-only text</span></p>
-    <p class="readout num">72.5<small>units</small></p>
-    <span class="ornament ornament--wide" style="width:320px" aria-hidden="true"></span>
+    <p class="hx-lede">Lede paragraph: a short introduction in muted text with a relaxed line height.</p>
+    <p>Body paragraph with <strong>strong text</strong>, <em class="hx-em">gold emphasis (.hx-em)</em>, <a href="#typography">a link (inherits the text colour)</a> and <code>inline code</code>.</p>
+    <p class="hx-muted">Muted secondary text for supporting information.</p>
+    <p><span class="hx-caps">Column head</span> · <span class="hx-count">03 / 12</span> · <span class="hx-num">1,234.50</span> (tabular numerals) · <span class="hx-sr-only">Screen-reader-only text</span></p>
+    <p class="hx-readout hx-num">72.5<small>units</small></p>
+    <span class="hx-ornament hx-ornament--wide" style="width:320px" aria-hidden="true"></span>
   </section>
 
   <!-- ===================== FOCUS ===================== -->
   <section class="demo-section" id="focus" aria-labelledby="h-focus">
-    <span class="eyebrow">03 / Focus</span>
+    <span class="hx-eyebrow">03 / Focus</span>
     <h2 id="h-focus">Focus ring</h2>
-    <p class="muted"><code>:focus-visible</code> draws a 2px gold-bright ring with a 2px offset (keyboard only). <code>.is-focus</code> shows it statically. Faceted buttons (C, E) draw it inside the facet because clip-path cuts outside outlines.</p>
+    <p class="hx-muted"><code>:focus-visible</code> draws a 2px gold-bright ring with a 4px offset (keyboard only). <code>.hx-is-focus</code> shows it statically. Faceted buttons (C, E) draw it inside the facet because clip-path cuts outside outlines.</p>
     <div class="demo-row">
-      <a href="#focus" class="is-focus">Focused link</a>
-      <button type="button" class="chip is-focus">Focused chip</button>
-      <button type="button" class="btn btn--secondary is-focus"><span>Focused button</span></button>
-      <button type="button" class="btn btn--primary is-focus"><span>Focused primary</span></button>
-      <input class="input is-focus" style="max-width:220px" value="Focused input" aria-label="Focused input">
+      <a href="#focus" class="hx-is-focus">Focused link</a>
+      <button type="button" class="hx-chip hx-is-focus">Focused chip</button>
+      <button type="button" class="hx-btn hx-btn--secondary hx-is-focus"><span>Focused button</span></button>
+      <button type="button" class="hx-btn hx-btn--primary hx-is-focus"><span>Focused primary</span></button>
+      <input class="hx-input hx-is-focus" style="max-width:220px" value="Focused input" aria-label="Focused input">
     </div>
     <p class="demo-note">Press Tab on this page to see the live ring.</p>
   </section>
 
   <!-- ===================== BUTTONS ===================== -->
   <section class="demo-section" id="buttons" aria-labelledby="h-buttons">
-    <span class="eyebrow">04 / Buttons</span>
+    <span class="hx-eyebrow">04 / Buttons</span>
     <h2 id="h-buttons">Buttons</h2>
-    <p class="muted">Use the switcher at the top to compare variants A, B, C and E. Wrap the label in a <code>&lt;span&gt;</code> (variant B frames it). Hover: no separate style by design (touch-first); pressed feedback comes from <code>:active</code>, shown here via <code>.is-pressed</code>.</p>
+    <p class="hx-muted">Use the switcher at the top to compare variants A, B, C and E. Wrap the label in a <code>&lt;span&gt;</code> (variant B frames it). Hover: no separate style by design (touch-first); pressed feedback comes from <code>:active</code>, shown here via <code>.hx-is-pressed</code>.</p>
     <div class="demo-scroll">
       <div class="demo-matrix">
-        <span></span><span class="caps">Default</span><span class="caps">Pressed</span><span class="caps">Disabled</span><span class="caps">Focus</span>
-        <span class="caps">Primary</span>
-        <button type="button" class="btn btn--primary btn--block"><span>Start</span></button>
-        <button type="button" class="btn btn--primary btn--block is-pressed" tabindex="-1"><span>Start</span></button>
-        <button type="button" class="btn btn--primary btn--block" disabled><span>Start</span></button>
-        <button type="button" class="btn btn--primary btn--block is-focus" tabindex="-1"><span>Start</span></button>
-        <span class="caps">Secondary</span>
-        <button type="button" class="btn btn--secondary btn--block"><span>Edit</span></button>
-        <button type="button" class="btn btn--secondary btn--block is-pressed" tabindex="-1"><span>Edit</span></button>
-        <button type="button" class="btn btn--secondary btn--block" disabled><span>Edit</span></button>
-        <button type="button" class="btn btn--secondary btn--block is-focus" tabindex="-1"><span>Edit</span></button>
-        <span class="caps">Ghost</span>
-        <button type="button" class="btn btn--ghost btn--block"><span>Later</span></button>
-        <button type="button" class="btn btn--ghost btn--block is-pressed" tabindex="-1"><span>Later</span></button>
-        <button type="button" class="btn btn--ghost btn--block" disabled><span>Later</span></button>
-        <button type="button" class="btn btn--ghost btn--block is-focus" tabindex="-1"><span>Later</span></button>
-        <span class="caps">Danger</span>
-        <button type="button" class="btn btn--danger btn--block"><span>Delete</span></button>
-        <button type="button" class="btn btn--danger btn--block is-pressed" tabindex="-1"><span>Delete</span></button>
-        <button type="button" class="btn btn--danger btn--block" disabled><span>Delete</span></button>
-        <button type="button" class="btn btn--danger btn--block is-focus" tabindex="-1"><span>Delete</span></button>
+        <span></span><span class="hx-caps">Default</span><span class="hx-caps">Pressed</span><span class="hx-caps">Disabled</span><span class="hx-caps">Focus</span>
+        <span class="hx-caps">Primary</span>
+        <button type="button" class="hx-btn hx-btn--primary hx-btn--block"><span>Start</span></button>
+        <button type="button" class="hx-btn hx-btn--primary hx-btn--block hx-is-pressed" tabindex="-1"><span>Start</span></button>
+        <button type="button" class="hx-btn hx-btn--primary hx-btn--block" disabled><span>Start</span></button>
+        <button type="button" class="hx-btn hx-btn--primary hx-btn--block hx-is-focus" tabindex="-1"><span>Start</span></button>
+        <span class="hx-caps">Secondary</span>
+        <button type="button" class="hx-btn hx-btn--secondary hx-btn--block"><span>Edit</span></button>
+        <button type="button" class="hx-btn hx-btn--secondary hx-btn--block hx-is-pressed" tabindex="-1"><span>Edit</span></button>
+        <button type="button" class="hx-btn hx-btn--secondary hx-btn--block" disabled><span>Edit</span></button>
+        <button type="button" class="hx-btn hx-btn--secondary hx-btn--block hx-is-focus" tabindex="-1"><span>Edit</span></button>
+        <span class="hx-caps">Ghost</span>
+        <button type="button" class="hx-btn hx-btn--ghost hx-btn--block"><span>Later</span></button>
+        <button type="button" class="hx-btn hx-btn--ghost hx-btn--block hx-is-pressed" tabindex="-1"><span>Later</span></button>
+        <button type="button" class="hx-btn hx-btn--ghost hx-btn--block" disabled><span>Later</span></button>
+        <button type="button" class="hx-btn hx-btn--ghost hx-btn--block hx-is-focus" tabindex="-1"><span>Later</span></button>
+        <span class="hx-caps">Danger</span>
+        <button type="button" class="hx-btn hx-btn--danger hx-btn--block"><span>Delete</span></button>
+        <button type="button" class="hx-btn hx-btn--danger hx-btn--block hx-is-pressed" tabindex="-1"><span>Delete</span></button>
+        <button type="button" class="hx-btn hx-btn--danger hx-btn--block" disabled><span>Delete</span></button>
+        <button type="button" class="hx-btn hx-btn--danger hx-btn--block hx-is-focus" tabindex="-1"><span>Delete</span></button>
       </div>
     </div>
 
-    <span class="demo-label caps">Sizes and shapes</span>
+    <span class="demo-label hx-caps">Sizes and shapes</span>
     <div class="demo-row">
-      <button type="button" class="btn btn--primary"><span>Default · 48px</span></button>
-      <button type="button" class="btn btn--primary btn--xl"><span>Extra large · 64px</span></button>
-      <button type="button" class="btn btn--secondary btn--square" aria-label="Add"><span>+</span></button>
-      <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Add"><span>+</span></button>
-      <button type="button" class="btn btn--secondary"><span><svg aria-hidden="true"><use href="#i-plus"/></svg>&nbsp;With icon</span></button>
-      <a class="btn btn--secondary" href="#buttons"><span>Link as button</span></a>
-      <a class="btn btn--secondary" aria-disabled="true"><span>aria-disabled link</span></a>
+      <button type="button" class="hx-btn hx-btn--primary"><span>Default · 48px</span></button>
+      <button type="button" class="hx-btn hx-btn--primary hx-btn--xl"><span>Extra large · 64px</span></button>
+      <button type="button" class="hx-btn hx-btn--secondary hx-btn--square" aria-label="Add"><span>+</span></button>
+      <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Add"><span>+</span></button>
+      <button type="button" class="hx-btn hx-btn--secondary"><span><svg aria-hidden="true"><use href="#i-plus"/></svg>With icon</span></button>
+      <a class="hx-btn hx-btn--secondary" href="#buttons"><span>Link as button</span></a>
+      <a class="hx-btn hx-btn--secondary" aria-disabled="true"><span>aria-disabled link</span></a>
     </div>
     <div class="demo-narrow">
-      <button type="button" class="btn btn--primary btn--xl btn--block"><span>Full width call to action</span></button>
+      <button type="button" class="hx-btn hx-btn--primary hx-btn--xl hx-btn--block"><span>Full width call to action</span></button>
     </div>
 
-    <span class="demo-label caps">Icon button</span>
+    <span class="demo-label hx-caps">Icon button</span>
     <div class="demo-row">
-      <button type="button" class="icon-btn" aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
-      <button type="button" class="icon-btn is-pressed" aria-label="Close" tabindex="-1"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
-      <button type="button" class="icon-btn" aria-label="Close" disabled><svg aria-hidden="true"><use href="#i-close"/></svg></button>
-      <button type="button" class="icon-btn icon-btn--bare" aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      <button type="button" class="hx-icon-btn" aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      <button type="button" class="hx-icon-btn hx-is-pressed" aria-label="Close" tabindex="-1"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      <button type="button" class="hx-icon-btn" aria-label="Close" disabled><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+      <button type="button" class="hx-icon-btn hx-icon-btn--bare" aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
     </div>
   </section>
 
   <!-- ===================== STEPPER ===================== -->
   <section class="demo-section" id="stepper" aria-labelledby="h-stepper">
-    <span class="eyebrow">05 / Stepper</span>
+    <span class="hx-eyebrow">05 / Stepper</span>
     <h2 id="h-stepper">Square stepper</h2>
-    <p class="muted">Two square buttons around a value. The buttons follow the active button variant.</p>
+    <p class="hx-muted">Two square buttons around a value. The buttons follow the active button variant.</p>
     <div class="demo-grid">
       <div>
-        <div class="stepper-label"><span>Amount</span><span>Default</span></div>
-        <div class="stepper">
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Decrease"><span>−</span></button>
-          <output class="stepper__value">80<small>units</small></output>
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Increase"><span>+</span></button>
+        <div class="hx-stepper-label"><span>Amount</span><span>Default</span></div>
+        <div class="hx-stepper">
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Decrease"><span>−</span></button>
+          <output class="hx-stepper__value">80<small>units</small></output>
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Increase"><span>+</span></button>
         </div>
       </div>
       <div>
-        <div class="stepper-label"><span>Amount</span><span>Pressed (+)</span></div>
-        <div class="stepper">
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Decrease"><span>−</span></button>
-          <output class="stepper__value">85<small>units</small></output>
-          <button type="button" class="btn btn--secondary btn--square btn--lg is-pressed" aria-label="Increase" tabindex="-1"><span>+</span></button>
+        <div class="hx-stepper-label"><span>Amount</span><span>Pressed (+)</span></div>
+        <div class="hx-stepper">
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Decrease"><span>−</span></button>
+          <output class="hx-stepper__value">85<small>units</small></output>
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg hx-is-pressed" aria-label="Increase" tabindex="-1"><span>+</span></button>
         </div>
       </div>
       <div>
-        <div class="stepper-label"><span>Amount</span><span>At minimum</span></div>
-        <div class="stepper">
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Decrease" disabled><span>−</span></button>
-          <output class="stepper__value">0<small>units</small></output>
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Increase"><span>+</span></button>
+        <div class="hx-stepper-label"><span>Amount</span><span>At minimum</span></div>
+        <div class="hx-stepper">
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Decrease" disabled><span>−</span></button>
+          <output class="hx-stepper__value">0<small>units</small></output>
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Increase"><span>+</span></button>
         </div>
       </div>
       <div>
-        <div class="stepper-label"><span>Amount</span><span>Invalid</span></div>
-        <div class="stepper is-invalid">
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Decrease"><span>−</span></button>
-          <output class="stepper__value">999<small>units</small></output>
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Increase" disabled><span>+</span></button>
+        <div class="hx-stepper-label"><span>Amount</span><span>Invalid</span></div>
+        <div class="hx-stepper hx-is-invalid">
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Decrease"><span>−</span></button>
+          <output class="hx-stepper__value">999<small>units</small></output>
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Increase" disabled><span>+</span></button>
         </div>
       </div>
       <div>
-        <div class="stepper-label"><span>Amount</span><span>Disabled</span></div>
-        <div class="stepper is-disabled">
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Decrease" disabled><span>−</span></button>
-          <output class="stepper__value">40<small>units</small></output>
-          <button type="button" class="btn btn--secondary btn--square btn--lg" aria-label="Increase" disabled><span>+</span></button>
+        <div class="hx-stepper-label"><span>Amount</span><span>Disabled</span></div>
+        <div class="hx-stepper hx-is-disabled">
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Decrease" disabled><span>−</span></button>
+          <output class="hx-stepper__value">40<small>units</small></output>
+          <button type="button" class="hx-btn hx-btn--secondary hx-btn--square hx-btn--lg" aria-label="Increase" disabled><span>+</span></button>
         </div>
       </div>
     </div>
@@ -336,133 +338,133 @@
 
   <!-- ===================== INPUTS ===================== -->
   <section class="demo-section" id="inputs" aria-labelledby="h-inputs">
-    <span class="eyebrow">06 / Inputs</span>
+    <span class="hx-eyebrow">06 / Inputs</span>
     <h2 id="h-inputs">Inputs</h2>
-    <p class="muted">Text, number, select and textarea share <code>.input</code>. Hover (pointer devices) brightens the border to line-gold.</p>
+    <p class="hx-muted">Text, number, select and textarea share <code>.hx-input</code>. Hover (pointer devices) brightens the border to line-gold.</p>
     <div class="demo-grid">
-      <label class="field"><span class="field__label">Text</span><input class="input" type="text" placeholder="Placeholder text"><span class="field__hint">Hint text below the control.</span></label>
-      <label class="field"><span class="field__label">Number</span><input class="input" type="number" value="42" inputmode="decimal"></label>
-      <label class="field"><span class="field__label">Select</span><span class="select"><select class="input"><option>First option</option><option>Second option</option><option>Third option</option></select></span></label>
-      <label class="field"><span class="field__label">Focused</span><input class="input is-focus" type="text" value="Focused value"></label>
-      <label class="field is-invalid"><span class="field__label">Error</span><input class="input" type="text" value="Wrong value" aria-invalid="true" aria-describedby="err-1"><span class="field__error" id="err-1">Explain what is wrong and how to fix it.</span></label>
-      <label class="field is-disabled"><span class="field__label">Disabled</span><input class="input" type="text" value="Not editable" disabled></label>
-      <label class="field is-disabled"><span class="field__label">Disabled select</span><span class="select"><select class="input" disabled><option>Unavailable</option></select></span></label>
-      <label class="field" style="grid-column:1/-1"><span class="field__label">Textarea</span><textarea class="input" placeholder="Longer free text"></textarea></label>
+      <label class="hx-field"><span class="hx-field__label">Text</span><input class="hx-input" type="text" placeholder="Placeholder text"><span class="hx-field__hint">Hint text below the control.</span></label>
+      <label class="hx-field"><span class="hx-field__label">Number</span><input class="hx-input" type="number" value="42" inputmode="decimal"></label>
+      <label class="hx-field"><span class="hx-field__label">Select</span><span class="hx-select"><select class="hx-input"><option>First option</option><option>Second option</option><option>Third option</option></select></span></label>
+      <label class="hx-field"><span class="hx-field__label">Focused</span><input class="hx-input hx-is-focus" type="text" value="Focused value"></label>
+      <label class="hx-field hx-is-invalid"><span class="hx-field__label">Error</span><input class="hx-input" type="text" value="Wrong value" aria-invalid="true" aria-describedby="err-1"><span class="hx-field__error" id="err-1">Explain what is wrong and how to fix it.</span></label>
+      <label class="hx-field hx-is-disabled"><span class="hx-field__label">Disabled</span><input class="hx-input" type="text" value="Not editable" disabled></label>
+      <label class="hx-field hx-is-disabled"><span class="hx-field__label">Disabled select</span><span class="hx-select"><select class="hx-input" disabled><option>Unavailable</option></select></span></label>
+      <label class="hx-field" style="grid-column:1/-1"><span class="hx-field__label">Textarea</span><textarea class="hx-input" placeholder="Longer free text"></textarea></label>
     </div>
   </section>
 
   <!-- ===================== CHIPS ===================== -->
   <section class="demo-section" id="chips" aria-labelledby="h-chips">
-    <span class="eyebrow">07 / Chips</span>
+    <span class="hx-eyebrow">07 / Chips</span>
     <h2 id="h-chips">Chips and segmented control</h2>
-    <p class="muted">Selected via <code>aria-pressed</code>, <code>aria-checked</code>, <code>aria-selected</code> or <code>.is-selected</code>.</p>
-    <div class="chip-row" role="radiogroup" aria-label="Example choice">
-      <button type="button" class="chip" role="radio" aria-checked="false">Unselected</button>
-      <button type="button" class="chip" role="radio" aria-checked="true">Selected</button>
-      <button type="button" class="chip is-pressed" role="radio" aria-checked="false" tabindex="-1">Pressed</button>
-      <button type="button" class="chip" role="radio" aria-checked="false" disabled>Disabled</button>
-      <button type="button" class="chip" aria-pressed="true" disabled>Disabled selected</button>
+    <p class="hx-muted">Selected via <code>aria-pressed</code>, <code>aria-checked</code>, <code>aria-selected</code> or <code>.hx-is-selected</code>.</p>
+    <div class="hx-chip-row" role="radiogroup" aria-label="Example choice">
+      <button type="button" class="hx-chip" role="radio" aria-checked="false">Unselected</button>
+      <button type="button" class="hx-chip" role="radio" aria-checked="true">Selected</button>
+      <button type="button" class="hx-chip hx-is-pressed" role="radio" aria-checked="false" tabindex="-1">Pressed</button>
+      <button type="button" class="hx-chip" role="radio" aria-checked="false" disabled>Disabled</button>
+      <button type="button" class="hx-chip" aria-pressed="true" disabled>Disabled selected</button>
     </div>
-    <span class="demo-label caps">Pills (read-only)</span>
-    <div class="demo-row"><span class="pill">Label</span><span class="pill pill--muted">Muted</span><span class="pill pill--warn">Warning</span></div>
-    <span class="demo-label caps">Segmented control</span>
+    <span class="demo-label hx-caps">Pills (read-only)</span>
+    <div class="demo-row"><span class="hx-pill">Label</span><span class="hx-pill hx-pill--muted">Muted</span><span class="hx-pill hx-pill--warn">Warning</span></div>
+    <span class="demo-label hx-caps">Segmented control</span>
     <div class="demo-narrow">
-      <div class="segmented" role="group" aria-label="Range">
-        <button type="button" class="segmented__item" aria-pressed="false">Day</button>
-        <button type="button" class="segmented__item" aria-pressed="true">Week</button>
-        <button type="button" class="segmented__item" aria-pressed="false">Month</button>
-        <button type="button" class="segmented__item" aria-pressed="false" disabled>Year</button>
+      <div class="hx-segmented" role="group" aria-label="Range">
+        <button type="button" class="hx-segmented__item" aria-pressed="false">Day</button>
+        <button type="button" class="hx-segmented__item" aria-pressed="true">Week</button>
+        <button type="button" class="hx-segmented__item" aria-pressed="false">Month</button>
+        <button type="button" class="hx-segmented__item" aria-pressed="false" disabled>Year</button>
       </div>
     </div>
   </section>
 
   <!-- ===================== CARDS ===================== -->
   <section class="demo-section" id="cards" aria-labelledby="h-cards">
-    <span class="eyebrow">08 / Cards</span>
+    <span class="hx-eyebrow">08 / Cards</span>
     <h2 id="h-cards">Cards</h2>
-    <p class="muted">Plain, accent, raised and interactive. Interactive cards brighten on hover (pointer devices); <code>.is-hover</code> shows that statically.</p>
+    <p class="hx-muted">Plain, accent, raised and interactive. Interactive cards brighten on hover (pointer devices); <code>.hx-is-hover</code> shows that statically.</p>
     <div class="demo-grid">
-      <article class="card"><span class="eyebrow">Plain</span><h3 class="card__title">Card title</h3><p class="card__meta">Meta line · 3 items</p></article>
-      <article class="card card--accent"><div class="card__head"><h3 class="card__title">Accent card</h3><span class="count">02</span></div><p class="muted" style="font-size:.86rem">Gold line border for grouped content.</p></article>
-      <article class="card card--raised"><span class="eyebrow">Raised</span><h3 class="card__title">Raised card</h3><p class="card__meta">Edge light and drop shadow</p><div class="card__foot"><button type="button" class="btn btn--secondary"><span>Action</span></button></div></article>
-      <article class="card card--ornament"><h3 class="card__title">Ornament card</h3><p class="card__meta">Meander frieze, at most one per screen</p></article>
-      <a class="card card--interactive" href="#cards"><span class="eyebrow">Interactive</span><span class="card__title" style="display:block">Default</span><span class="card__meta" style="display:block">Tap to open</span></a>
-      <a class="card card--interactive is-hover" href="#cards"><span class="eyebrow">Interactive</span><span class="card__title" style="display:block">Hover</span><span class="card__meta" style="display:block">Pointer devices only</span></a>
-      <a class="card card--interactive is-pressed" href="#cards" tabindex="-1"><span class="eyebrow">Interactive</span><span class="card__title" style="display:block">Pressed</span><span class="card__meta" style="display:block">Sinks by 1px</span></a>
-      <a class="card card--interactive is-selected" href="#cards"><span class="eyebrow">Interactive</span><span class="card__title" style="display:block">Selected</span><span class="card__meta" style="display:block">Gold border and rail</span></a>
-      <button type="button" class="card card--interactive" disabled><span class="eyebrow">Interactive</span><span class="card__title" style="display:block">Disabled</span><span class="card__meta" style="display:block">Not available</span></button>
+      <article class="hx-card"><span class="hx-eyebrow">Plain</span><h3 class="hx-card__title">Card title</h3><p class="hx-card__meta">Meta line · 3 items</p></article>
+      <article class="hx-card hx-card--accent"><div class="hx-card__head"><h3 class="hx-card__title">Accent card</h3><span class="hx-count">02</span></div><p class="hx-muted" style="font-size:.86rem">Gold line border for grouped content.</p></article>
+      <article class="hx-card hx-card--raised"><span class="hx-eyebrow">Raised</span><h3 class="hx-card__title">Raised card</h3><p class="hx-card__meta">Edge light and drop shadow</p><div class="hx-card__foot"><button type="button" class="hx-btn hx-btn--secondary"><span>Action</span></button></div></article>
+      <article class="hx-card hx-card--ornament"><h3 class="hx-card__title">Ornament card</h3><p class="hx-card__meta">Meander frieze, at most one per screen</p></article>
+      <a class="hx-card hx-card--interactive" href="#cards"><span class="hx-eyebrow">Interactive</span><span class="hx-card__title" style="display:block">Default</span><span class="hx-card__meta" style="display:block">Tap to open</span></a>
+      <a class="hx-card hx-card--interactive hx-is-hover" href="#cards"><span class="hx-eyebrow">Interactive</span><span class="hx-card__title" style="display:block">Hover</span><span class="hx-card__meta" style="display:block">Pointer devices only</span></a>
+      <a class="hx-card hx-card--interactive hx-is-pressed" href="#cards" tabindex="-1"><span class="hx-eyebrow">Interactive</span><span class="hx-card__title" style="display:block">Pressed</span><span class="hx-card__meta" style="display:block">Sinks by 1px</span></a>
+      <a class="hx-card hx-card--interactive hx-is-selected" href="#cards"><span class="hx-eyebrow">Interactive</span><span class="hx-card__title" style="display:block">Selected</span><span class="hx-card__meta" style="display:block">Gold border and rail</span></a>
+      <button type="button" class="hx-card hx-card--interactive" disabled><span class="hx-eyebrow">Interactive</span><span class="hx-card__title" style="display:block">Disabled</span><span class="hx-card__meta" style="display:block">Not available</span></button>
     </div>
   </section>
 
   <!-- ===================== LIST ROWS ===================== -->
   <section class="demo-section" id="list-rows" aria-labelledby="h-list">
-    <span class="eyebrow">09 / List rows</span>
+    <span class="hx-eyebrow">09 / List rows</span>
     <h2 id="h-list">List rows</h2>
-    <p class="muted">Rows with leading, main and trailing parts, separated by dividers. <code>.list--flush</code> removes the dividers.</p>
+    <p class="hx-muted">Rows with leading, main and trailing parts, separated by dividers. <code>.hx-list--flush</code> removes the dividers.</p>
     <div class="demo-grid" style="grid-template-columns:repeat(auto-fill,minmax(340px,1fr))">
-      <ul class="list">
-        <li class="list-divider">Plain</li>
-        <li class="list-row"><div class="list-row__main"><div class="list-row__title">Row title</div><div class="list-row__meta">Meta line</div></div></li>
-        <li class="list-row"><span class="list-row__lead">AB</span><div class="list-row__main"><div class="list-row__title">With leading</div><div class="list-row__meta">Thumbnail or icon</div></div><div class="list-row__trail num">158<small>units</small></div></li>
-        <li class="list-row"><span class="list-row__lead"><svg aria-hidden="true"><use href="#i-list"/></svg></span><div class="list-row__main"><div class="list-row__title">With trailing action</div><div class="list-row__meta">Icon button at the end</div></div><button type="button" class="icon-btn icon-btn--bare" aria-label="Add row item"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></li>
+      <ul class="hx-list">
+        <li class="hx-list-divider">Plain</li>
+        <li class="hx-list-row"><div class="hx-list-row__main"><div class="hx-list-row__title">Row title</div><div class="hx-list-row__meta">Meta line</div></div></li>
+        <li class="hx-list-row"><span class="hx-list-row__lead">AB</span><div class="hx-list-row__main"><div class="hx-list-row__title">With leading</div><div class="hx-list-row__meta">Thumbnail or icon</div></div><div class="hx-list-row__trail hx-num">158<small>units</small></div></li>
+        <li class="hx-list-row"><span class="hx-list-row__lead"><svg aria-hidden="true"><use href="#i-list"/></svg></span><div class="hx-list-row__main"><div class="hx-list-row__title">With trailing action</div><div class="hx-list-row__meta">Icon button at the end</div></div><button type="button" class="hx-icon-btn hx-icon-btn--bare" aria-label="Add row item"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></li>
       </ul>
-      <ul class="list">
-        <li class="list-divider">Interactive</li>
-        <li><a class="list-row list-row--interactive" href="#list-rows"><div class="list-row__main"><div class="list-row__title">Default</div><div class="list-row__meta">Tap target is the whole row</div></div><span class="list-row__trail"><svg width="18" height="18" aria-hidden="true" style="stroke:var(--gold-deep);fill:none;stroke-width:1.6"><use href="#i-right"/></svg></span></a></li>
-        <li><a class="list-row list-row--interactive is-hover" href="#list-rows"><div class="list-row__main"><div class="list-row__title">Hover</div><div class="list-row__meta">Pointer devices only</div></div></a></li>
-        <li><a class="list-row list-row--interactive is-pressed" href="#list-rows" tabindex="-1"><div class="list-row__main"><div class="list-row__title">Pressed</div><div class="list-row__meta">Gold rail</div></div></a></li>
-        <li><a class="list-row list-row--interactive" href="#list-rows" aria-current="page"><div class="list-row__main"><div class="list-row__title">Selected</div><div class="list-row__meta">aria-current="page"</div></div></a></li>
-        <li><button type="button" class="list-row list-row--interactive" disabled><div class="list-row__main"><div class="list-row__title">Disabled</div><div class="list-row__meta">Not available</div></div><span class="list-row__trail">—</span></button></li>
+      <ul class="hx-list">
+        <li class="hx-list-divider">Interactive</li>
+        <li><a class="hx-list-row hx-list-row--interactive" href="#list-rows"><div class="hx-list-row__main"><div class="hx-list-row__title">Default</div><div class="hx-list-row__meta">Tap target is the whole row</div></div><span class="hx-list-row__trail"><svg width="18" height="18" aria-hidden="true" style="stroke:var(--gold-deep);fill:none;stroke-width:1.6"><use href="#i-right"/></svg></span></a></li>
+        <li><a class="hx-list-row hx-list-row--interactive hx-is-hover" href="#list-rows"><div class="hx-list-row__main"><div class="hx-list-row__title">Hover</div><div class="hx-list-row__meta">Pointer devices only</div></div></a></li>
+        <li><a class="hx-list-row hx-list-row--interactive hx-is-pressed" href="#list-rows" tabindex="-1"><div class="hx-list-row__main"><div class="hx-list-row__title">Pressed</div><div class="hx-list-row__meta">Gold rail</div></div></a></li>
+        <li><a class="hx-list-row hx-list-row--interactive" href="#list-rows" aria-current="page"><div class="hx-list-row__main"><div class="hx-list-row__title">Selected</div><div class="hx-list-row__meta">aria-current="page"</div></div></a></li>
+        <li><button type="button" class="hx-list-row hx-list-row--interactive" disabled><div class="hx-list-row__main"><div class="hx-list-row__title">Disabled</div><div class="hx-list-row__meta">Not available</div></div><span class="hx-list-row__trail">—</span></button></li>
       </ul>
-      <ul class="list list--flush">
-        <li class="list-row"><div class="list-row__main"><div class="list-row__title">Flush list</div></div></li>
-        <li class="list-row"><div class="list-row__main"><div class="list-row__title">No dividers</div></div></li>
+      <ul class="hx-list hx-list--flush">
+        <li class="hx-list-row"><div class="hx-list-row__main"><div class="hx-list-row__title">Flush list</div></div></li>
+        <li class="hx-list-row"><div class="hx-list-row__main"><div class="hx-list-row__title">No dividers</div></div></li>
       </ul>
     </div>
   </section>
 
   <!-- ===================== NAV ===================== -->
   <section class="demo-section" id="nav" aria-labelledby="h-nav">
-    <span class="eyebrow">10 / Navigation</span>
+    <span class="hx-eyebrow">10 / Navigation</span>
     <h2 id="h-nav">Bottom nav and side nav</h2>
-    <p class="muted">Inside <code>.app-shell</code> the bottom nav shows below 1100px and the side nav from 1100px. The frames below pin both statically; in an app they are fixed to the viewport. Active item: <code>aria-current="page"</code>.</p>
+    <p class="hx-muted">Inside <code>.hx-app-shell</code> the bottom nav shows below 1100px and the side nav from 1100px. The frames below pin both statically; in an app they are fixed to the viewport. Active item: <code>aria-current="page"</code>.</p>
     <div class="demo-row">
       <div class="demo-stage demo-stage--mobile" aria-label="Mobile frame">
-        <div class="app-shell">
-          <nav class="side-nav" aria-label="Main"></nav>
-          <main class="app-shell__main">
-            <span class="eyebrow">Mobile · below 1100px</span>
+        <div class="hx-app-shell">
+          <nav class="hx-side-nav" aria-label="Main"></nav>
+          <main class="hx-app-shell__main">
+            <span class="hx-eyebrow">Mobile · below 1100px</span>
             <h1 style="font-size:var(--fs-h1)">Overview</h1>
-            <div class="card"><h3 class="card__title">Content area</h3><p class="card__meta">Bottom padding clears nav and FAB</p></div>
+            <div class="hx-card"><h3 class="hx-card__title">Content area</h3><p class="hx-card__meta">Bottom padding clears nav and FAB</p></div>
           </main>
-          <nav class="bottom-nav" aria-label="Main">
-            <a class="bottom-nav__item" href="#nav" aria-current="page"><span class="bottom-nav__icon"><svg aria-hidden="true"><use href="#i-home"/></svg></span>Home</a>
-            <a class="bottom-nav__item" href="#nav"><span class="bottom-nav__icon"><svg aria-hidden="true"><use href="#i-list"/></svg></span>Lists</a>
-            <a class="bottom-nav__item" href="#nav"><span class="bottom-nav__icon"><svg aria-hidden="true"><use href="#i-grid"/></svg></span>Items</a>
-            <a class="bottom-nav__item" href="#nav"><span class="bottom-nav__icon"><svg aria-hidden="true"><use href="#i-chart"/></svg></span>Stats</a>
-            <a class="bottom-nav__item" href="#nav"><span class="bottom-nav__icon"><svg aria-hidden="true"><use href="#i-user"/></svg></span>Profile</a>
+          <nav class="hx-bottom-nav" aria-label="Main">
+            <a class="hx-bottom-nav__item" href="#nav" aria-current="page"><span class="hx-bottom-nav__icon"><svg aria-hidden="true"><use href="#i-home"/></svg></span>Home</a>
+            <a class="hx-bottom-nav__item" href="#nav"><span class="hx-bottom-nav__icon"><svg aria-hidden="true"><use href="#i-list"/></svg></span>Lists</a>
+            <a class="hx-bottom-nav__item" href="#nav"><span class="hx-bottom-nav__icon"><svg aria-hidden="true"><use href="#i-grid"/></svg></span>Items</a>
+            <a class="hx-bottom-nav__item" href="#nav"><span class="hx-bottom-nav__icon"><svg aria-hidden="true"><use href="#i-chart"/></svg></span>Stats</a>
+            <a class="hx-bottom-nav__item" href="#nav"><span class="hx-bottom-nav__icon"><svg aria-hidden="true"><use href="#i-user"/></svg></span>Profile</a>
           </nav>
         </div>
       </div>
     </div>
     <div class="demo-scroll">
       <div class="demo-stage demo-stage--desktop" aria-label="Desktop frame">
-        <div class="app-shell">
-          <nav class="side-nav" aria-label="Main">
-            <a class="side-nav__brand" href="#nav"><span class="side-nav__mark">H</span>BRAND</a>
-            <span class="side-nav__label">Navigation</span>
-            <a class="side-nav__item" href="#nav" aria-current="page"><span class="side-nav__icon"><svg aria-hidden="true"><use href="#i-home"/></svg></span>Home</a>
-            <a class="side-nav__item" href="#nav"><span class="side-nav__icon"><svg aria-hidden="true"><use href="#i-list"/></svg></span>Lists</a>
-            <a class="side-nav__item" href="#nav"><span class="side-nav__icon"><svg aria-hidden="true"><use href="#i-grid"/></svg></span>Items</a>
-            <a class="side-nav__item" href="#nav"><span class="side-nav__icon"><svg aria-hidden="true"><use href="#i-chart"/></svg></span>Stats</a>
-            <div class="side-nav__foot">VERSION 0.1.0</div>
+        <div class="hx-app-shell">
+          <nav class="hx-side-nav" aria-label="Main">
+            <a class="hx-side-nav__brand" href="#nav"><span class="hx-side-nav__mark">H</span>BRAND</a>
+            <span class="hx-side-nav__label">Navigation</span>
+            <a class="hx-side-nav__item" href="#nav" aria-current="page"><span class="hx-side-nav__icon"><svg aria-hidden="true"><use href="#i-home"/></svg></span>Home</a>
+            <a class="hx-side-nav__item" href="#nav"><span class="hx-side-nav__icon"><svg aria-hidden="true"><use href="#i-list"/></svg></span>Lists</a>
+            <a class="hx-side-nav__item" href="#nav"><span class="hx-side-nav__icon"><svg aria-hidden="true"><use href="#i-grid"/></svg></span>Items</a>
+            <a class="hx-side-nav__item" href="#nav"><span class="hx-side-nav__icon"><svg aria-hidden="true"><use href="#i-chart"/></svg></span>Stats</a>
+            <div class="hx-side-nav__foot">VERSION 0.1.0</div>
           </nav>
-          <main class="app-shell__main">
-            <span class="eyebrow">Desktop · from 1100px</span>
+          <main class="hx-app-shell__main">
+            <span class="hx-eyebrow">Desktop · from 1100px</span>
             <h1 style="font-size:2.4rem">Overview</h1>
-            <p class="lede">The side nav replaces the bottom nav; the FAB moves to the bottom-right corner.</p>
+            <p class="hx-lede">The side nav replaces the bottom nav; the FAB moves to the bottom-right corner.</p>
           </main>
-          <nav class="bottom-nav" aria-label="Main"></nav>
+          <nav class="hx-bottom-nav" aria-label="Main"></nav>
         </div>
       </div>
     </div>
@@ -470,56 +472,56 @@
 
   <!-- ===================== FAB ===================== -->
   <section class="demo-section" id="fab" aria-labelledby="h-fab">
-    <span class="eyebrow">11 / FAB</span>
+    <span class="hx-eyebrow">11 / FAB</span>
     <h2 id="h-fab">Floating action button</h2>
-    <p class="muted">Square, flat gold, above the bottom nav. Shown in static frames; hide with <code>[hidden]</code> while a sheet is open.</p>
+    <p class="hx-muted">Square, flat gold, above the bottom nav. Shown in static frames; hide with <code>[hidden]</code> while a sheet is open.</p>
     <div class="demo-row">
-      <div class="demo-stage" style="width:140px;height:140px"><button type="button" class="fab" style="right:40px;bottom:40px" aria-label="Add"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
-      <div class="demo-stage" style="width:140px;height:140px"><button type="button" class="fab is-pressed" style="right:40px;bottom:40px" aria-label="Add" tabindex="-1"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
-      <div class="demo-stage" style="width:140px;height:140px"><button type="button" class="fab is-focus" style="right:40px;bottom:40px" aria-label="Add" tabindex="-1"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
-      <div class="demo-stage" style="width:140px;height:140px"><button type="button" class="fab" style="right:40px;bottom:40px" aria-label="Add" disabled><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
-      <div class="demo-stage" style="width:220px;height:140px"><button type="button" class="fab fab--extended" style="right:30px;bottom:40px"><svg aria-hidden="true"><use href="#i-plus"/></svg>New item</button></div>
+      <div class="demo-stage" style="width:140px;height:140px"><button type="button" class="hx-fab" style="right:40px;bottom:40px" aria-label="Add"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
+      <div class="demo-stage" style="width:140px;height:140px"><button type="button" class="hx-fab hx-is-pressed" style="right:40px;bottom:40px" aria-label="Add" tabindex="-1"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
+      <div class="demo-stage" style="width:140px;height:140px"><button type="button" class="hx-fab hx-is-focus" style="right:40px;bottom:40px" aria-label="Add" tabindex="-1"><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
+      <div class="demo-stage" style="width:140px;height:140px"><button type="button" class="hx-fab" style="right:40px;bottom:40px" aria-label="Add" disabled><svg aria-hidden="true"><use href="#i-plus"/></svg></button></div>
+      <div class="demo-stage" style="width:220px;height:140px"><button type="button" class="hx-fab hx-fab--extended" style="right:30px;bottom:40px"><svg aria-hidden="true"><use href="#i-plus"/></svg>New item</button></div>
     </div>
     <p class="demo-note">Default · pressed · focus · disabled · extended.</p>
   </section>
 
   <!-- ===================== SHEET ===================== -->
   <section class="demo-section" id="sheet" aria-labelledby="h-sheet">
-    <span class="eyebrow">12 / Sheet</span>
+    <span class="hx-eyebrow">12 / Sheet</span>
     <h2 id="h-sheet">Bottom sheet and dialog</h2>
-    <p class="muted">Use <code>&lt;dialog class="sheet"&gt;</code> / <code>&lt;dialog class="dialog"&gt;</code> with <code>showModal()</code> (the backdrop is the scrim), or a plain element toggled with <code>[hidden]</code> next to a <code>.scrim</code>. Shown open and static here.</p>
+    <p class="hx-muted">Use <code>&lt;dialog class="hx-sheet"&gt;</code> / <code>&lt;dialog class="hx-dialog"&gt;</code> with <code>showModal()</code> (the backdrop is the scrim), or a plain element toggled with <code>[hidden]</code> next to a <code>.hx-scrim</code>. Shown open and static here.</p>
     <div class="demo-row">
       <div class="demo-stage demo-stage--sheet">
-        <div class="card" style="margin:var(--space-4)"><h3 class="card__title">Page behind the sheet</h3><p class="card__meta">Dimmed by the scrim</p></div>
-        <div class="scrim"></div>
-        <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-          <div class="sheet__handle"></div>
-          <div class="sheet__head">
-            <div><span class="eyebrow" style="margin:0">Sheet eyebrow</span><h2 class="sheet__title" id="sheet-title">Sheet title</h2></div>
-            <button type="button" class="icon-btn icon-btn--bare" aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+        <div class="hx-card" style="margin:var(--space-4)"><h3 class="hx-card__title">Page behind the sheet</h3><p class="hx-card__meta">Dimmed by the scrim</p></div>
+        <div class="hx-scrim"></div>
+        <div class="hx-sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+          <div class="hx-sheet__handle"></div>
+          <div class="hx-sheet__head">
+            <div><span class="hx-eyebrow" style="margin:0">Sheet eyebrow</span><h2 class="hx-sheet__title" id="sheet-title">Sheet title</h2></div>
+            <button type="button" class="hx-icon-btn hx-icon-btn--bare" aria-label="Close"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
           </div>
-          <div class="sheet__body">
-            <div class="chip-row"><button type="button" class="chip" aria-pressed="true">Option one</button><button type="button" class="chip" aria-pressed="false">Option two</button></div>
-            <ul class="list" style="margin-top:var(--space-3)">
-              <li class="list-row"><div class="list-row__main"><div class="list-row__title">Sheet row</div><div class="list-row__meta">Meta line</div></div><div class="list-row__trail num">12</div></li>
-              <li class="list-row"><div class="list-row__main"><div class="list-row__title">Another row</div><div class="list-row__meta">Meta line</div></div><div class="list-row__trail num">34</div></li>
+          <div class="hx-sheet__body">
+            <div class="hx-chip-row"><button type="button" class="hx-chip" aria-pressed="true">Option one</button><button type="button" class="hx-chip" aria-pressed="false">Option two</button></div>
+            <ul class="hx-list" style="margin-top:var(--space-3)">
+              <li class="hx-list-row"><div class="hx-list-row__main"><div class="hx-list-row__title">Sheet row</div><div class="hx-list-row__meta">Meta line</div></div><div class="hx-list-row__trail hx-num">12</div></li>
+              <li class="hx-list-row"><div class="hx-list-row__main"><div class="hx-list-row__title">Another row</div><div class="hx-list-row__meta">Meta line</div></div><div class="hx-list-row__trail hx-num">34</div></li>
             </ul>
           </div>
-          <div class="sheet__foot">
-            <button type="button" class="btn btn--ghost btn--block"><span>Cancel</span></button>
-            <button type="button" class="btn btn--primary btn--block"><span>Confirm</span></button>
+          <div class="hx-sheet__foot">
+            <button type="button" class="hx-btn hx-btn--ghost hx-btn--block"><span>Cancel</span></button>
+            <button type="button" class="hx-btn hx-btn--primary hx-btn--block"><span>Confirm</span></button>
           </div>
         </div>
       </div>
       <div class="demo-stage demo-stage--dialog">
-        <div class="scrim"></div>
-        <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
-          <span class="eyebrow" style="margin:0">Confirm</span>
-          <h2 class="dialog__title" id="dialog-title">Discard changes?</h2>
-          <div class="dialog__body">The changes made in this form will be lost. This cannot be undone.</div>
-          <div class="dialog__actions">
-            <button type="button" class="btn btn--secondary"><span>Keep editing</span></button>
-            <button type="button" class="btn btn--danger"><span>Discard</span></button>
+        <div class="hx-scrim"></div>
+        <div class="hx-dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+          <span class="hx-eyebrow" style="margin:0">Confirm</span>
+          <h2 class="hx-dialog__title" id="dialog-title">Discard changes?</h2>
+          <div class="hx-dialog__body">The changes made in this form will be lost. This cannot be undone.</div>
+          <div class="hx-dialog__actions">
+            <button type="button" class="hx-btn hx-btn--secondary"><span>Keep editing</span></button>
+            <button type="button" class="hx-btn hx-btn--danger"><span>Discard</span></button>
           </div>
         </div>
       </div>
@@ -528,56 +530,56 @@
 
   <!-- ===================== TOAST ===================== -->
   <section class="demo-section" id="toast" aria-labelledby="h-toast">
-    <span class="eyebrow">13 / Toast</span>
+    <span class="hx-eyebrow">13 / Toast</span>
     <h2 id="h-toast">Toast</h2>
-    <p class="muted">Info toasts use <code>role="status"</code>, error toasts <code>.toast--error</code> with <code>role="alert"</code>. In an app the region sits above the bottom nav.</p>
+    <p class="hx-muted">Info toasts use <code>role="status"</code>, error toasts <code>.hx-toast--error</code> with <code>role="alert"</code>. In an app the region sits above the bottom nav.</p>
     <div class="demo-stage demo-stage--toast">
-      <div class="toast-region">
-        <div class="toast" role="status"><span class="toast__text">Item saved.</span><button type="button" class="btn btn--ghost"><span>Undo</span></button></div>
-        <div class="toast toast--error" role="alert"><span class="toast__text">Could not save. Check the connection.</span><button type="button" class="btn btn--ghost"><span>Retry</span></button></div>
+      <div class="hx-toast-region">
+        <div class="hx-toast" role="status"><span class="hx-toast__text">Item saved.</span><button type="button" class="hx-btn hx-btn--ghost"><span>Undo</span></button></div>
+        <div class="hx-toast hx-toast--error" role="alert"><span class="hx-toast__text">Could not save. Check the connection.</span><button type="button" class="hx-btn hx-btn--ghost"><span>Retry</span></button></div>
       </div>
     </div>
   </section>
 
   <!-- ===================== STATES ===================== -->
   <section class="demo-section" id="states" aria-labelledby="h-states">
-    <span class="eyebrow">14 / States</span>
+    <span class="hx-eyebrow">14 / States</span>
     <h2 id="h-states">Empty, loading and error</h2>
-    <p class="muted">The skeleton shimmer and the spinner only animate when <code>prefers-reduced-motion</code> allows it.</p>
+    <p class="hx-muted">The skeleton shimmer and the spinner only animate when <code>prefers-reduced-motion</code> allows it.</p>
     <div class="demo-grid">
-      <div class="empty"><strong class="empty__title">Nothing here yet</strong>Short explanation of what will appear here and how to start.<div class="empty__actions"><button type="button" class="btn btn--secondary"><span>Create first item</span></button></div></div>
-      <div class="card" aria-busy="true" aria-label="Loading">
+      <div class="hx-empty"><strong class="hx-empty__title">Nothing here yet</strong>Short explanation of what will appear here and how to start.<div class="hx-empty__actions"><button type="button" class="hx-btn hx-btn--secondary"><span>Create first item</span></button></div></div>
+      <div class="hx-card" aria-busy="true" aria-label="Loading">
         <div style="display:flex;gap:var(--space-4);align-items:center">
-          <span class="skeleton skeleton--circle" style="width:64px"></span>
-          <div style="flex:1"><span class="skeleton skeleton--title"></span><span class="skeleton skeleton--line" style="width:80%"></span><span class="skeleton skeleton--line" style="width:55%"></span></div>
+          <span class="hx-skeleton hx-skeleton--circle" style="width:64px"></span>
+          <div style="flex:1"><span class="hx-skeleton hx-skeleton--title"></span><span class="hx-skeleton hx-skeleton--line" style="width:80%"></span><span class="hx-skeleton hx-skeleton--line" style="width:55%"></span></div>
         </div>
-        <span class="skeleton skeleton--block" style="margin-top:var(--space-4)"></span>
+        <span class="hx-skeleton hx-skeleton--block" style="margin-top:var(--space-4)"></span>
       </div>
-      <div class="notice notice--error" role="alert"><strong class="notice__title">Could not load data</strong>Only this block is affected; the rest of the page stays usable.<div class="notice__actions"><button type="button" class="btn btn--secondary"><span>Try again</span></button></div></div>
-      <div class="notice"><strong class="notice__title">Notice</strong>Neutral information that needs no action.</div>
-      <div class="card"><div style="display:flex;align-items:center;gap:var(--space-3)"><span class="spinner" role="progressbar" aria-label="Loading"></span><span class="muted">Loading…</span></div></div>
+      <div class="hx-notice hx-notice--error" role="alert"><strong class="hx-notice__title">Could not load data</strong>Only this block is affected; the rest of the page stays usable.<div class="hx-notice__actions"><button type="button" class="hx-btn hx-btn--secondary"><span>Try again</span></button></div></div>
+      <div class="hx-notice"><strong class="hx-notice__title">Notice</strong>Neutral information that needs no action.</div>
+      <div class="hx-card"><div style="display:flex;align-items:center;gap:var(--space-3)"><span class="hx-spinner" role="progressbar" aria-label="Loading"></span><span class="hx-muted">Loading…</span></div></div>
     </div>
   </section>
 
   <!-- ===================== PROGRESS ===================== -->
   <section class="demo-section" id="progress" aria-labelledby="h-progress">
-    <span class="eyebrow">15 / Progress</span>
+    <span class="hx-eyebrow">15 / Progress</span>
     <h2 id="h-progress">Progress ring and bars</h2>
-    <p class="muted">CSS only. Set <code>--value</code> (0-100) inline and mirror it in <code>aria-valuenow</code>.</p>
+    <p class="hx-muted">CSS only. Set <code>--value</code> (0-100) inline and mirror it in <code>aria-valuenow</code>.</p>
     <div class="demo-row" style="gap:var(--space-6)">
-      <div class="progress-ring" style="--value: 0" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="progress-ring__label"><strong class="num">0%</strong><span>Empty</span></div></div>
-      <div class="progress-ring" style="--value: 58" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="58"><div class="progress-ring__label"><strong class="num">58%</strong><span>Progress</span></div></div>
-      <div class="progress-ring" style="--value: 100" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="progress-ring__label"><strong class="num">100%</strong><span>Complete</span></div></div>
-      <div class="progress-ring progress-ring--idle" style="--value: 35" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"><div class="progress-ring__label"><strong class="num">35%</strong><span>Idle</span></div></div>
-      <div class="progress-ring progress-ring--over" style="--value: 100" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="progress-ring__label"><strong class="num">+12</strong><span>Over</span></div></div>
-      <div class="progress-ring progress-ring--sm" style="--value: 72" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72"><div class="progress-ring__label"><strong class="num">72</strong></div></div>
+      <div class="hx-progress-ring" style="--value: 0" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="hx-progress-ring__label"><strong class="hx-num">0%</strong><span>Empty</span></div></div>
+      <div class="hx-progress-ring" style="--value: 58" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="58"><div class="hx-progress-ring__label"><strong class="hx-num">58%</strong><span>Progress</span></div></div>
+      <div class="hx-progress-ring" style="--value: 100" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="hx-progress-ring__label"><strong class="hx-num">100%</strong><span>Complete</span></div></div>
+      <div class="hx-progress-ring hx-progress-ring--idle" style="--value: 35" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="35"><div class="hx-progress-ring__label"><strong class="hx-num">35%</strong><span>Idle</span></div></div>
+      <div class="hx-progress-ring hx-progress-ring--over" style="--value: 100" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100"><div class="hx-progress-ring__label"><strong class="hx-num">+12</strong><span>Over</span></div></div>
+      <div class="hx-progress-ring hx-progress-ring--sm" style="--value: 72" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="72"><div class="hx-progress-ring__label"><strong class="hx-num">72</strong></div></div>
     </div>
     <div style="max-width:520px;display:grid;gap:var(--space-4);margin-top:var(--space-5)">
-      <div><div class="progress-head"><span>Default</span><span class="num">40 / 100</span></div><div class="progress-bar" style="--value: 40" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div></div>
-      <div><div class="progress-head"><span>High</span><span class="num">85 / 100</span></div><div class="progress-bar progress-bar--high" style="--value: 85" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div></div>
-      <div><div class="progress-head"><span>Over</span><span class="num">112 / 100</span></div><div class="progress-bar progress-bar--over" style="--value: 100" role="progressbar" aria-valuenow="112" aria-valuemin="0" aria-valuemax="100"></div></div>
-      <div><div class="progress-head"><span>Thin</span><span class="num">60%</span></div><div class="progress-bar progress-bar--thin" style="--value: 60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div></div>
-      <div><div class="progress-head"><span>Steps</span><span class="num">3 / 5</span></div><div class="progress-steps" aria-label="Step 3 of 5"><i class="is-done"></i><i class="is-done"></i><i class="is-current"></i><i></i><i></i></div></div>
+      <div><div class="hx-progress-head"><span>Default</span><span class="hx-num">40 / 100</span></div><div class="hx-progress-bar" style="--value: 40" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div></div>
+      <div><div class="hx-progress-head"><span>High</span><span class="hx-num">85 / 100</span></div><div class="hx-progress-bar hx-progress-bar--high" style="--value: 85" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"></div></div>
+      <div><div class="hx-progress-head"><span>Over</span><span class="hx-num">112 / 100</span></div><div class="hx-progress-bar hx-progress-bar--over" style="--value: 100" role="progressbar" aria-valuenow="112" aria-valuemin="0" aria-valuemax="100"></div></div>
+      <div><div class="hx-progress-head"><span>Thin</span><span class="hx-num">60%</span></div><div class="hx-progress-bar hx-progress-bar--thin" style="--value: 60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div></div>
+      <div><div class="hx-progress-head"><span>Steps</span><span class="hx-num">3 / 5</span></div><div class="hx-progress-steps" aria-label="Step 3 of 5"><i class="hx-is-done"></i><i class="hx-is-done"></i><i class="hx-is-current"></i><i></i><i></i></div></div>
     </div>
   </section>
 </main>

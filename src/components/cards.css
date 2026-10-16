@@ -1,5 +1,5 @@
 /* Cards: flat panel surfaces. Square, 1px line, optional eyebrow / title / meta. */
-.card {
+.hx-card {
   position: relative;
   display: block;
   min-width: 0;
@@ -9,14 +9,14 @@
   border-radius: var(--radius-none);
   color: var(--ivory);
 }
-.card--accent { border-color: var(--line-gold); }
-.card--raised {
+.hx-card--accent { border-color: var(--line-gold); }
+.hx-card--raised {
   background: var(--panel-alt);
   border-color: var(--line-gold);
   box-shadow: var(--shadow-edge-hi-soft), var(--shadow-drop);
 }
 
-.card--interactive {
+.hx-card--interactive {
   width: 100%;
   font: inherit;
   text-align: left;
@@ -25,19 +25,19 @@
   transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 @media (hover: hover) {
-  .card--interactive:hover { border-color: var(--gold-deep); }
+  .hx-card--interactive:hover { border-color: var(--gold-deep); }
 }
-.card--interactive.is-hover { border-color: var(--gold-deep); }
-.card--interactive:is(:active, .is-pressed) {
+.hx-card--interactive.hx-is-hover { border-color: var(--gold-deep); }
+.hx-card--interactive:is(:active, .hx-is-pressed) {
   background: var(--gold-wash);
   border-color: var(--gold);
   transform: translateY(1px);
 }
-.card:is(.is-selected, [aria-current='page'], [aria-selected='true']) {
+.hx-card:is(.hx-is-selected, [aria-current='page'], [aria-selected='true']) {
   border-color: var(--gold);
   box-shadow: inset 2px 0 0 var(--gold);
 }
-.card--interactive:is(:disabled, [aria-disabled='true']) {
+.hx-card--interactive:is(:disabled, [aria-disabled='true']) {
   color: var(--fg-disabled);
   border-color: var(--line);
   background: var(--panel);
@@ -46,8 +46,8 @@
 }
 
 /* rare highlight: meander frieze on top (at most one per screen) */
-.card--ornament { padding-top: 40px; }
-.card--ornament::before {
+.hx-card--ornament { padding-top: 40px; }
+.hx-card--ornament::before {
   content: '';
   position: absolute;
   top: 14px;
@@ -58,26 +58,26 @@
   opacity: 0.8;
 }
 
-.card__head {
+.hx-card__head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: var(--space-3);
   margin-bottom: var(--space-3);
 }
-.card__title {
+.hx-card__title {
   margin: 0;
   font-size: var(--fs-title);
   font-weight: 500;
   line-height: 1.25;
   color: var(--ivory);
 }
-.card__meta {
+.hx-card__meta {
   margin: var(--space-1) 0 0;
   font-size: var(--fs-small);
   color: var(--muted);
 }
-.card__foot {
+.hx-card__foot {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);

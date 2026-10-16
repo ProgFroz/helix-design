@@ -1,6 +1,6 @@
 /* Toasts: short, non-blocking messages above the bottom nav (bottom-right on desktop).
-   Info: role="status"; error: .toast--error + role="alert". */
-.toast-region {
+   Info: role="status"; error: .hx-toast--error + role="alert". */
+.hx-toast-region {
   position: fixed;
   left: var(--gutter);
   right: var(--gutter);
@@ -11,7 +11,7 @@
   gap: var(--space-2);
   pointer-events: none;
 }
-.toast {
+.hx-toast {
   display: flex;
   align-items: center;
   gap: var(--space-3);
@@ -25,7 +25,7 @@
   box-shadow: var(--shadow-float);
   pointer-events: auto;
 }
-.toast::before {
+.hx-toast::before {
   content: '';
   flex: none;
   width: 7px;
@@ -33,11 +33,11 @@
   border-radius: var(--radius-round);
   background: var(--gold);
 }
-.toast__text { flex: 1; min-width: 0; padding: 6px 0; }
-.toast--error { border-color: var(--bad-line); }
-.toast--error::before { background: var(--bad); }
-.toast--error .toast__text { color: var(--warn); }
+.hx-toast__text { flex: 1; min-width: 0; padding: 6px 0; }
+.hx-toast--error { border-color: var(--bad-line); }
+.hx-toast--error::before { background: var(--bad); }
+.hx-toast--error .hx-toast__text { color: var(--warn); }
 
 @media (min-width: 1100px) {
-  .toast-region { left: auto; right: var(--space-6); bottom: var(--space-6); width: 420px; }
+  .hx-toast-region { left: auto; right: var(--space-6); bottom: var(--space-6); width: 420px; }
 }

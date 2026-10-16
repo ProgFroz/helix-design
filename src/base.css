@@ -1,4 +1,7 @@
-/* Base: reset + typography. Mobile sizes first; Pantheon desktop sizes from 1100px. */
+/* Opt-in element base: reset + typography for whole pages (dist/helix-base.css, layer helix.base).
+   helix-design.css never styles elements globally; import this file to adopt the Pantheon page base.
+   Mobile sizes first; Pantheon desktop sizes from 1100px (the mobile-first heading scale below
+   1100px applies to all consumers, see TOKENS.md). */
 
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -28,7 +31,7 @@ p { margin-bottom: var(--space-3); }
 p:last-child { margin-bottom: 0; }
 
 h1, h2, h3, h4 {
-  font-family: var(--font-serif);
+  font-family: var(--font-sans);
   font-weight: 500;
   letter-spacing: 0.005em;
   line-height: var(--lh-tight);
@@ -46,12 +49,11 @@ h4 { font-size: var(--fs-h4); line-height: 1.25; }
   h4 { font-size: var(--fs-h4-lg); }
 }
 
-a { color: var(--gold-bright); text-decoration: none; }
-a:hover { color: var(--ivory); }
+/* Pantheon: links take the surrounding colour; components colour their own links */
+a { color: inherit; text-decoration: none; }
 
 strong, b { font-weight: 600; color: var(--ivory); }
 small { font-size: var(--fs-small); }
-em { font-style: normal; color: var(--gold-bright); }
 
 code, kbd, samp, pre {
   font-family: var(--font-mono);
@@ -76,42 +78,13 @@ button { cursor: pointer; }
 
 ::selection { background: var(--gold-deep); color: var(--ivory); }
 
-/* ---------- text helpers ---------- */
-.eyebrow {
-  display: block;
-  margin: 0 0 var(--space-2);
-  font-size: var(--fs-micro);
-  letter-spacing: var(--tracking-micro);
-  font-weight: 600;
-  text-transform: uppercase;
-  color: var(--gold);
+/* Focus ring for every element: gold-bright, 2px, offset 4px, keyboard focus only.
+   hx- components carry the same ring themselves (components/focus.css). */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
 }
-
-.muted { color: var(--muted); }
-
-.num { font-variant-numeric: tabular-nums lining-nums; }
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Meander frieze: a rare highlight, decorative only. */
-.ornament {
-  display: block;
-  height: var(--meander-h);
-  border: 0;
-  margin: 0;
-  background: var(--meander) 0 0 / auto 100% repeat-x;
-}
-.ornament--wide { height: var(--meander-h-long); }
+:focus:not(:focus-visible) { outline: none; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

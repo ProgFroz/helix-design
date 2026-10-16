@@ -1,12 +1,12 @@
-/* Inputs: .field wraps label, control, hint and error. .input styles input, select and textarea. */
-.field {
+/* Inputs: .hx-field wraps label, control, hint and error. .hx-input styles input, select and textarea. */
+.hx-field {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 0;
 }
 
-.field__label {
+.hx-field__label {
   font-size: var(--fs-head);
   letter-spacing: var(--tracking-caps);
   text-transform: uppercase;
@@ -14,16 +14,16 @@
   color: var(--muted);
 }
 
-.field__hint,
-.field__error {
+.hx-field__hint,
+.hx-field__error {
   margin: 0;
   font-size: var(--fs-small);
   line-height: 1.4;
   color: var(--muted);
 }
-.field__error { color: var(--warn); }
+.hx-field__error { color: var(--warn); }
 
-.input {
+.hx-input {
   appearance: none;
   display: block;
   width: 100%;
@@ -38,39 +38,39 @@
   font-size: 1rem;
   transition: border-color var(--dur) var(--ease);
 }
-.input::placeholder { color: var(--muted); opacity: 0.75; }
+.hx-input::placeholder { color: var(--muted); opacity: 0.75; }
 @media (hover: hover) {
-  .input:hover { border-color: var(--line-gold); }
+  .hx-input:hover { border-color: var(--line-gold); }
 }
-.input:focus,
-.input.is-focus { border-color: var(--gold); }
+.hx-input:focus,
+.hx-input.hx-is-focus { border-color: var(--gold); }
 
-textarea.input {
+textarea.hx-input {
   min-height: calc(var(--tap) * 2);
   padding: var(--space-3);
   line-height: 1.5;
   resize: vertical;
 }
-.input[type='number'] { font-variant-numeric: tabular-nums lining-nums; }
+.hx-input[type='number'] { font-variant-numeric: tabular-nums lining-nums; }
 
-.input[aria-invalid='true'],
-.field.is-invalid .input { border-color: var(--bad-line); }
-.input[aria-invalid='true']:focus,
-.field.is-invalid .input:focus { border-color: var(--bad); }
+.hx-input[aria-invalid='true'],
+.hx-field.hx-is-invalid .hx-input { border-color: var(--bad-line); }
+.hx-input[aria-invalid='true']:focus,
+.hx-field.hx-is-invalid .hx-input:focus { border-color: var(--bad); }
 
-.input:disabled,
-.input.is-disabled {
+.hx-input:disabled,
+.hx-input.hx-is-disabled {
   background: var(--stone);
   border-color: var(--line);
   color: var(--fg-disabled);
   cursor: not-allowed;
 }
-.field.is-disabled .field__label { color: var(--fg-disabled); }
+.hx-field.hx-is-disabled .hx-field__label { color: var(--fg-disabled); }
 
-/* select: wrap the <select class="input"> in .select for the chevron */
-.select { position: relative; display: block; }
-.select > .input { padding-right: 40px; cursor: pointer; }
-.select::after {
+/* select: wrap the <select class="input"> in .hx-select for the chevron */
+.hx-select { position: relative; display: block; }
+.hx-select > .hx-input { padding-right: 40px; cursor: pointer; }
+.hx-select::after {
   content: '';
   position: absolute;
   right: 18px;
@@ -82,5 +82,5 @@ textarea.input {
   transform: translateY(-70%) rotate(45deg);
   pointer-events: none;
 }
-.select:has(> .input:disabled)::after { border-color: var(--fg-disabled); }
-select.input option { background: var(--panel); color: var(--ivory); }
+.hx-select:has(> .hx-input:disabled)::after { border-color: var(--fg-disabled); }
+select.hx-input option { background: var(--panel); color: var(--ivory); }

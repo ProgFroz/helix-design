@@ -1,106 +1,110 @@
 /* Buttons: four flat variants (no gradients), selected by <html data-btn="a|b|c|e">.
    Missing or invalid attribute = E. Variant CSS is taken 1:1 from the button variant sheet
    (askesis-design 10-button-varianten.html, round 5); only the selectors are re-scoped:
-     .vA/.vB/.vC/.vE -> [data-btn="x"]   .b -> .btn   .p/.s/.g/.x -> .btn--primary/secondary/ghost/danger
-     .on -> .is-pressed   .xl -> .btn--xl   .sq -> .btn--square   .big -> .btn--lg   [disabled] (+ aria-disabled)
-   Specificity mirrors the source: every rule of one variant carries the same prefix.
-   Markup: <button class="btn btn--primary"><span>Label</span></button> (variant B frames the <span>).
+     .vA/.vB/.vC/.vE -> [data-btn="x"]   .b -> .hx-btn   .p/.s/.g/.x -> .hx-btn--primary/secondary/ghost/danger
+     .on -> .hx-is-pressed   .xl -> .hx-btn--xl   .sq -> .hx-btn--square   .big -> .hx-btn--lg   [disabled] (+ aria-disabled)
+   Specificity mirrors the source: every rule of one variant carries the same prefix. The default-E
+   arm (no or invalid data-btn) sits in :where(), so E weighs exactly as much as [data-btn="a|b|c"].
+   Labels of C/E use DM Sans caps (--font-sans; the sheet's serif fallback is not used, see TOKENS.md).
+   Markup: <button class="hx-btn hx-btn--primary"><span>Label</span></button> (variant B frames the <span>).
+   Icons go inside the <span>; it is an inline flex row, so the svg centres on the label.
    D (Relief) is rejected and intentionally absent. */
 
 /* ---------- shared button base ---------- */
-.btn{appearance:none;border:0;font:inherit;cursor:pointer;min-height:var(--tap);padding:0 var(--space-5);
+.hx-btn{appearance:none;border:0;font:inherit;cursor:pointer;min-height:var(--tap);padding:0 var(--space-5);
   display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:.85rem;font-weight:600;
   border-radius:var(--radius-none);text-decoration:none;white-space:nowrap;vertical-align:middle;
   transition:transform var(--dur) var(--ease),box-shadow var(--dur) var(--ease),background-color var(--dur) var(--ease)}
-.btn:focus-visible,.btn.is-focus{outline:var(--focus-ring-width) solid var(--focus-ring-color);outline-offset:var(--focus-ring-offset)}
-.btn:is([disabled],[aria-disabled="true"]){cursor:not-allowed}
-.btn.btn--xl{min-height:var(--tap-xl);font-size:1.02rem}
-.btn.btn--square{width:var(--tap);flex:none;padding:0;font-size:1.3rem}
-.btn.btn--square.btn--lg{width:56px;min-height:56px}
-.btn--block{width:100%}
-.btn svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6}
+.hx-btn:focus-visible,.hx-btn.hx-is-focus{outline:var(--focus-ring-width) solid var(--focus-ring-color);outline-offset:var(--focus-ring-offset)}
+.hx-btn:is([disabled],[aria-disabled="true"]){cursor:not-allowed}
+.hx-btn.hx-btn--xl{min-height:var(--tap-xl);font-size:1.02rem}
+.hx-btn.hx-btn--square{width:var(--tap);flex:none;padding:0;font-size:1.3rem}
+.hx-btn.hx-btn--square.hx-btn--lg{width:56px;min-height:56px}
+.hx-btn--block{width:100%}
+.hx-btn > span{display:inline-flex;align-items:center;gap:6px}
+.hx-btn svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.6}
 
 /* ---------- A  Plinth (Sockel) ---------- */
-[data-btn="a"] .btn{margin-bottom:3px}
-[data-btn="a"] .btn--primary{background:var(--gold);color:var(--stone);box-shadow:0 3px 0 var(--gold-edge)}
-[data-btn="a"] .btn--secondary{background:var(--panel);color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold-deep),0 3px 0 var(--line-gold)}
-[data-btn="a"] .btn--ghost{background:transparent;color:var(--gold)}
-[data-btn="a"] .btn--danger{background:var(--bad);color:var(--ivory);box-shadow:0 3px 0 var(--bad-edge)}
-[data-btn="a"] :is(.btn--primary,.btn--secondary,.btn--danger):is(:active,.is-pressed){transform:translateY(3px)}
-[data-btn="a"] :is(.btn--primary,.btn--danger):is(:active,.is-pressed){box-shadow:0 0 0 transparent}
-[data-btn="a"] .btn--secondary:is(:active,.is-pressed){box-shadow:inset 0 0 0 1px var(--gold-deep),0 0 0 transparent}
-[data-btn="a"] .btn--ghost:is(:active,.is-pressed){background:var(--gold-wash);transform:translateY(1px)}
-[data-btn="a"] .btn:is([disabled],[aria-disabled="true"]){background:var(--panel-alt);color:var(--fg-disabled);box-shadow:0 3px 0 var(--line);transform:none}
-[data-btn="a"] .btn--ghost:is([disabled],[aria-disabled="true"]){background:transparent;box-shadow:none}
+[data-btn="a"] .hx-btn{margin-bottom:3px}
+[data-btn="a"] .hx-btn--primary{background:var(--gold);color:var(--stone);box-shadow:0 3px 0 var(--gold-edge)}
+[data-btn="a"] .hx-btn--secondary{background:var(--panel);color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold-deep),0 3px 0 var(--line-gold)}
+[data-btn="a"] .hx-btn--ghost{background:transparent;color:var(--gold)}
+[data-btn="a"] .hx-btn--danger{background:var(--bad);color:var(--ivory);box-shadow:0 3px 0 var(--bad-edge)}
+[data-btn="a"] :is(.hx-btn--primary,.hx-btn--secondary,.hx-btn--danger):is(:active,.hx-is-pressed){transform:translateY(3px)}
+[data-btn="a"] :is(.hx-btn--primary,.hx-btn--danger):is(:active,.hx-is-pressed){box-shadow:0 0 0 transparent}
+[data-btn="a"] .hx-btn--secondary:is(:active,.hx-is-pressed){box-shadow:inset 0 0 0 1px var(--gold-deep),0 0 0 transparent}
+[data-btn="a"] .hx-btn--ghost:is(:active,.hx-is-pressed){background:var(--gold-wash);transform:translateY(1px)}
+[data-btn="a"] .hx-btn:is([disabled],[aria-disabled="true"]){background:var(--panel-alt);color:var(--fg-disabled);box-shadow:0 3px 0 var(--line);transform:none}
+[data-btn="a"] .hx-btn--ghost:is([disabled],[aria-disabled="true"]){background:transparent;box-shadow:none}
 
 /* ---------- B  Inscription tablet (Inschrift) ---------- */
-[data-btn="b"] .btn{border:1px solid var(--gold-deep);padding:3px;background:transparent;color:var(--gold)}
-[data-btn="b"] .btn > span{flex:1;align-self:stretch;display:flex;align-items:center;justify-content:center;border:1px solid var(--line-gold)}
-[data-btn="b"] .btn--primary > span{background:var(--gold);border-color:var(--gold);color:var(--stone)}
-[data-btn="b"] .btn--primary{border-color:var(--gold)}
-[data-btn="b"] .btn--secondary > span{border-color:var(--gold-deep)}
-[data-btn="b"] .btn--ghost{border-color:transparent}
-[data-btn="b"] .btn--ghost > span{border-color:transparent}
-[data-btn="b"] .btn--danger{border-color:var(--bad-line)}
-[data-btn="b"] .btn--danger > span{background:var(--bad);border-color:var(--bad);color:var(--ivory)}
-[data-btn="b"] .btn--primary:is(:active,.is-pressed) > span{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--ivory)}
-[data-btn="b"] .btn--primary:is(:active,.is-pressed){border-color:var(--gold-deep)}
-[data-btn="b"] :is(.btn--secondary,.btn--ghost):is(:active,.is-pressed) > span{background:var(--gold-wash);border-color:var(--gold)}
-[data-btn="b"] .btn--danger:is(:active,.is-pressed) > span{background:var(--bad-edge);border-color:var(--bad-edge)}
-[data-btn="b"] .btn:is([disabled],[aria-disabled="true"]){border-color:var(--line);color:var(--fg-disabled)}
-[data-btn="b"] .btn:is([disabled],[aria-disabled="true"]) > span{background:var(--panel-alt);border-color:var(--line);color:var(--fg-disabled)}
-[data-btn="b"] .btn--ghost:is([disabled],[aria-disabled="true"]),[data-btn="b"] .btn--ghost:is([disabled],[aria-disabled="true"]) > span{background:transparent;border-color:transparent}
+[data-btn="b"] .hx-btn{border:1px solid var(--gold-deep);padding:3px;background:transparent;color:var(--gold)}
+[data-btn="b"] .hx-btn > span{flex:1;align-self:stretch;display:flex;align-items:center;justify-content:center;border:1px solid var(--line-gold)}
+[data-btn="b"] .hx-btn--primary > span{background:var(--gold);border-color:var(--gold);color:var(--stone)}
+[data-btn="b"] .hx-btn--primary{border-color:var(--gold)}
+[data-btn="b"] .hx-btn--secondary > span{border-color:var(--gold-deep)}
+[data-btn="b"] .hx-btn--ghost{border-color:transparent}
+[data-btn="b"] .hx-btn--ghost > span{border-color:transparent}
+[data-btn="b"] .hx-btn--danger{border-color:var(--bad-line)}
+[data-btn="b"] .hx-btn--danger > span{background:var(--bad);border-color:var(--bad);color:var(--ivory)}
+[data-btn="b"] .hx-btn--primary:is(:active,.hx-is-pressed) > span{background:var(--gold-deep);border-color:var(--gold-deep);color:var(--ivory)}
+[data-btn="b"] .hx-btn--primary:is(:active,.hx-is-pressed){border-color:var(--gold-deep)}
+[data-btn="b"] :is(.hx-btn--secondary,.hx-btn--ghost):is(:active,.hx-is-pressed) > span{background:var(--gold-wash);border-color:var(--gold)}
+[data-btn="b"] .hx-btn--danger:is(:active,.hx-is-pressed) > span{background:var(--bad-edge);border-color:var(--bad-edge)}
+[data-btn="b"] .hx-btn:is([disabled],[aria-disabled="true"]){border-color:var(--line);color:var(--fg-disabled)}
+[data-btn="b"] .hx-btn:is([disabled],[aria-disabled="true"]) > span{background:var(--panel-alt);border-color:var(--line);color:var(--fg-disabled)}
+[data-btn="b"] .hx-btn--ghost:is([disabled],[aria-disabled="true"]),[data-btn="b"] .hx-btn--ghost:is([disabled],[aria-disabled="true"]) > span{background:transparent;border-color:transparent}
 /* library addition: the source buttons were full width; auto-width labels need inner padding */
-[data-btn="b"] .btn > span{padding:0 var(--space-4)}
-[data-btn="b"] .btn.btn--square > span{padding:0}
+[data-btn="b"] .hx-btn > span{padding:0 var(--space-4)}
+[data-btn="b"] .hx-btn.hx-btn--square > span{padding:0}
 
 /* ---------- C  Faceted (Facettiert), shared with E ---------- */
-[data-btn="c"] .btn,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn{font-family:var(--font-serif);text-transform:uppercase;letter-spacing:.12em;font-size:.74rem;
+[data-btn="c"] .hx-btn,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn{font-family:var(--font-sans);text-transform:uppercase;letter-spacing:.12em;font-size:.74rem;
   clip-path:polygon(var(--facet) 0,calc(100% - var(--facet)) 0,100% var(--facet),100% calc(100% - var(--facet)),calc(100% - var(--facet)) 100%,var(--facet) 100%,0 calc(100% - var(--facet)),0 var(--facet))}
-[data-btn="c"] .btn.btn--xl,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn.btn--xl{font-size:.92rem;letter-spacing:.16em}
-[data-btn="c"] .btn.btn--square,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn.btn--square{font-family:var(--font-sans);font-size:1.3rem;letter-spacing:0}
+[data-btn="c"] .hx-btn.hx-btn--xl,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn.hx-btn--xl{font-size:.92rem;letter-spacing:.16em}
+[data-btn="c"] .hx-btn.hx-btn--square,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn.hx-btn--square{font-family:var(--font-sans);font-size:1.3rem;letter-spacing:0}
 /* facet outline: outer gold layer + inner panel layer (clip-path cuts borders, so draw with 2 layers) */
-[data-btn="c"] .btn--secondary,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--secondary{background:var(--gold-deep);color:var(--gold);position:relative;z-index:0}
-[data-btn="c"] .btn--secondary::before,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--secondary::before{content:"";position:absolute;inset:1px;background:var(--panel);z-index:-1;
+[data-btn="c"] .hx-btn--secondary,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--secondary{background:var(--gold-deep);color:var(--gold);position:relative;z-index:0}
+[data-btn="c"] .hx-btn--secondary::before,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--secondary::before{content:"";position:absolute;inset:1px;background:var(--panel);z-index:-1;
   clip-path:polygon(calc(var(--facet) - .4px) 0,calc(100% - var(--facet) + .4px) 0,100% calc(var(--facet) - .4px),100% calc(100% - var(--facet) + .4px),calc(100% - var(--facet) + .4px) 100%,calc(var(--facet) - .4px) 100%,0 calc(100% - var(--facet) + .4px),0 calc(var(--facet) - .4px))}
-[data-btn="c"] .btn--primary{background:var(--gold);color:var(--stone)}
-[data-btn="c"] .btn--ghost,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--ghost{background:transparent;color:var(--gold);clip-path:none}
-[data-btn="c"] .btn--danger{background:var(--bad);color:var(--ivory)}
-[data-btn="c"] .btn--primary:is(:active,.is-pressed){background:var(--gold-deep);color:var(--ivory)}
-[data-btn="c"] .btn--secondary:is(:active,.is-pressed)::before{background:#1d1a14}
-[data-btn="c"] .btn--ghost:is(:active,.is-pressed),:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--ghost:is(:active,.is-pressed){background:var(--gold-wash);color:var(--gold-bright)}
-[data-btn="c"] .btn--danger:is(:active,.is-pressed){background:var(--bad-edge)}
-[data-btn="c"] .btn:is([disabled],[aria-disabled="true"]){background:var(--panel-alt);color:var(--fg-disabled)}
-[data-btn="c"] .btn--secondary:is([disabled],[aria-disabled="true"]),:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--secondary:is([disabled],[aria-disabled="true"]){background:var(--line)}
-[data-btn="c"] .btn--secondary:is([disabled],[aria-disabled="true"])::before,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--secondary:is([disabled],[aria-disabled="true"])::before{background:var(--panel-alt)}
-[data-btn="c"] .btn--ghost:is([disabled],[aria-disabled="true"]),:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--ghost:is([disabled],[aria-disabled="true"]){background:transparent;color:var(--fg-disabled)}
+[data-btn="c"] .hx-btn--primary{background:var(--gold);color:var(--stone)}
+[data-btn="c"] .hx-btn--ghost,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--ghost{background:transparent;color:var(--gold);clip-path:none}
+[data-btn="c"] .hx-btn--danger{background:var(--bad);color:var(--ivory)}
+[data-btn="c"] .hx-btn--primary:is(:active,.hx-is-pressed){background:var(--gold-deep);color:var(--ivory)}
+[data-btn="c"] .hx-btn--secondary:is(:active,.hx-is-pressed)::before{background:#1d1a14}
+[data-btn="c"] .hx-btn--ghost:is(:active,.hx-is-pressed),:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--ghost:is(:active,.hx-is-pressed){background:var(--gold-wash);color:var(--gold-bright)}
+[data-btn="c"] .hx-btn--danger:is(:active,.hx-is-pressed){background:var(--bad-edge)}
+[data-btn="c"] .hx-btn:is([disabled],[aria-disabled="true"]){background:var(--panel-alt);color:var(--fg-disabled)}
+[data-btn="c"] .hx-btn--secondary:is([disabled],[aria-disabled="true"]),:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--secondary:is([disabled],[aria-disabled="true"]){background:var(--line)}
+[data-btn="c"] .hx-btn--secondary:is([disabled],[aria-disabled="true"])::before,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--secondary:is([disabled],[aria-disabled="true"])::before{background:var(--panel-alt)}
+[data-btn="c"] .hx-btn--ghost:is([disabled],[aria-disabled="true"]),:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--ghost:is([disabled],[aria-disabled="true"]){background:transparent;color:var(--fg-disabled)}
 /* library addition (accessibility): clip-path also cuts an outside outline, so faceted
    buttons draw the focus ring inside the facet */
-[data-btn="c"] .btn:is(:focus-visible,.is-focus),:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn:is(:focus-visible,.is-focus){position:relative;outline:0}
-[data-btn="c"] .btn:is(:focus-visible,.is-focus)::after,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn:is(:focus-visible,.is-focus)::after{content:"";position:absolute;inset:3px;
+[data-btn="c"] .hx-btn:is(:focus-visible,.hx-is-focus),:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn:is(:focus-visible,.hx-is-focus){position:relative;outline:0}
+[data-btn="c"] .hx-btn:is(:focus-visible,.hx-is-focus)::after,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn:is(:focus-visible,.hx-is-focus)::after{content:"";position:absolute;inset:3px;
   border:var(--focus-ring-width) solid var(--focus-ring-color);pointer-events:none}
-[data-btn="c"] :is(.btn--primary,.btn--danger):is(:focus-visible,.is-focus)::after,:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) :is(.btn--primary,.btn--danger):is(:focus-visible,.is-focus)::after{border-color:var(--stone)}
+[data-btn="c"] :is(.hx-btn--primary,.hx-btn--danger):is(:focus-visible,.hx-is-focus)::after,:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) :is(.hx-btn--primary,.hx-btn--danger):is(:focus-visible,.hx-is-focus)::after{border-color:var(--stone)}
 
 /* ---------- E  Faceted + Plinth (Facette + Sockel), the default ---------- */
 /* clip-path would cut a box-shadow edge, so the plinth is the button's own bottom 3px (border-bottom). */
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--primary{background:var(--gold);color:var(--stone);border-bottom:3px solid var(--gold-edge)}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--danger{background:var(--bad);color:var(--ivory);border-bottom:3px solid var(--bad-edge)}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--secondary{border-bottom:3px solid var(--line-gold)}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) :is(.btn--primary,.btn--danger,.btn--secondary){transform:translateY(0)}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) :is(.btn--primary,.btn--danger,.btn--secondary):is(:active,.is-pressed){border-bottom-width:0;transform:translateY(3px);min-height:calc(var(--tap) - 3px)}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn.btn--xl:is(:active,.is-pressed){min-height:calc(var(--tap-xl) - 3px)}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn.btn--square.btn--lg:is(:active,.is-pressed){min-height:53px}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--secondary:is(:active,.is-pressed)::before{background:#1d1a14}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn:is([disabled],[aria-disabled="true"]){background:var(--panel-alt);color:var(--fg-disabled);border-bottom-color:var(--line);transform:none}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--secondary:is([disabled],[aria-disabled="true"]){background:var(--line)}
-:is([data-btn="e"],:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])) .btn--ghost:is([disabled],[aria-disabled="true"]){border:0;background:transparent}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--primary{background:var(--gold);color:var(--stone);border-bottom:3px solid var(--gold-edge)}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--danger{background:var(--bad);color:var(--ivory);border-bottom:3px solid var(--bad-edge)}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--secondary{border-bottom:3px solid var(--line-gold)}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) :is(.hx-btn--primary,.hx-btn--danger,.hx-btn--secondary){transform:translateY(0)}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) :is(.hx-btn--primary,.hx-btn--danger,.hx-btn--secondary):is(:active,.hx-is-pressed){border-bottom-width:0;transform:translateY(3px);min-height:calc(var(--tap) - 3px)}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn.hx-btn--xl:is(:active,.hx-is-pressed){min-height:calc(var(--tap-xl) - 3px)}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn.hx-btn--square.hx-btn--lg:is(:active,.hx-is-pressed){min-height:53px}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--secondary:is(:active,.hx-is-pressed)::before{background:#1d1a14}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn:is([disabled],[aria-disabled="true"]){background:var(--panel-alt);color:var(--fg-disabled);border-bottom-color:var(--line);transform:none}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--secondary:is([disabled],[aria-disabled="true"]){background:var(--line)}
+:is([data-btn="e"],:where(:root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"]))) .hx-btn--ghost:is([disabled],[aria-disabled="true"]){border:0;background:transparent}
 
 /* ---------- icon button (variant-independent: square, bordered, no fill) ---------- */
-.icon-btn{appearance:none;background:transparent;width:var(--tap);height:var(--tap);flex:none;display:grid;place-items:center;
+.hx-icon-btn{appearance:none;background:transparent;width:var(--tap);height:var(--tap);flex:none;display:grid;place-items:center;
   padding:0;border:1px solid var(--line-gold);border-radius:var(--radius-none);color:var(--gold);cursor:pointer;
   transition:background-color var(--dur) var(--ease),color var(--dur) var(--ease)}
-.icon-btn--bare{border-color:transparent;color:var(--muted)}
-.icon-btn:is(:active,.is-pressed){background:var(--gold-wash);color:var(--gold-bright)}
-.icon-btn:is([disabled],[aria-disabled="true"]){color:var(--fg-disabled);border-color:var(--line);background:transparent;cursor:not-allowed}
-.icon-btn--bare:is([disabled],[aria-disabled="true"]){border-color:transparent}
-.icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6}
+.hx-icon-btn--bare{border-color:transparent;color:var(--muted)}
+.hx-icon-btn:is(:active,.hx-is-pressed){background:var(--gold-wash);color:var(--gold-bright)}
+.hx-icon-btn:is([disabled],[aria-disabled="true"]){color:var(--fg-disabled);border-color:var(--line);background:transparent;cursor:not-allowed}
+.hx-icon-btn--bare:is([disabled],[aria-disabled="true"]){border-color:transparent}
+.hx-icon-btn svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.6}

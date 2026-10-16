@@ -113,7 +113,7 @@
 
   /* ---------- focus ring ---------- */
   --focus-ring-width: 2px;
-  --focus-ring-offset: 2px;
+  --focus-ring-offset: 4px;
   --focus-ring-color: var(--gold-bright);
 
   /* ---------- z-index ---------- */

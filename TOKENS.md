@@ -17,6 +17,22 @@ Sources:
 Reconciliation rule: Pantheon wins on conflicts (dark, gold accent, radius 0, DM Sans).
 Existing names are kept wherever Pantheon and Askesis agree.
 
+## Decisions and Pantheon overrides
+
+Intended changes from the design review of PR #1 (findings F1-F4):
+
+- **Heading scale.** Pantheon override, decided by Justin: mobile-first heading scale applies to all consumers below 1100px.
+  Below 1100px h1/h2/h3 use `--fs-h1` (1.875rem), `--fs-h2` (1.375rem), `--fs-h3` (1.125rem);
+  from 1100px they use Pantheon's sizes `--fs-h1-lg`, `--fs-h2-lg`, `--fs-h3-lg`. Pantheon itself
+  used its desktop sizes at every width; adopting `helix-base.css` changes that below 1100px on purpose.
+- **Typeface.** Decided by Justin: DM Sans everywhere, including C/E caps labels. Headings and
+  the faceted button labels use `--font-sans`; `--font-serif` (and `--serif`) stay as aliases of
+  `--font-sans` and no serif fallback exists anywhere. The button sheet's serif caps are not used.
+- **Focus ring offset** is Pantheon's 4px (`--focus-ring-offset`); it was Askesis' 2px (F2).
+- **Links** inherit their colour (Pantheon `a { color: inherit }`), also on hover; the gold link
+  colour of the first draft is gone (F4).
+- **Emphasis.** There is no global `em` rule any more; gold emphasis is the opt-in `.hx-em` helper.
+
 ## Renamed or merged tokens
 
 Every old name still resolves through a deprecated alias in `src/tokens.css` (marked
@@ -25,7 +41,7 @@ Every old name still resolves through a deprecated alias in `src/tokens.css` (ma
 | old name -> new name | source | note |
 | --- | --- | --- |
 | `--sans` -> `--font-sans` | both | ambiguous short name; alias kept |
-| `--serif` -> `--font-serif` | pantheon | Pantheon value (`var(--font-sans)`) wins over the Cinzel fallback stack of the askesis button sheet, so variants C/E render in DM Sans caps; alias kept |
+| `--serif` -> `--font-serif` | pantheon | Pantheon value (`var(--font-sans)`) wins over the serif fallback stack of the askesis button sheet, so variants C/E render in DM Sans caps (decided by Justin, see Decisions); alias kept |
 | `--mono` -> `--font-mono` | pantheon | Pantheon stack (adds `Segoe UI Mono`); Askesis had it inline in `code`; alias kept |
 | `--s-1` -> `--space-1` (4px) | askesis | spacing scale renamed for clarity; alias kept |
 | `--s-2` -> `--space-2` (8px) | askesis | alias kept |
@@ -41,7 +57,7 @@ Every old name still resolves through a deprecated alias in `src/tokens.css` (ma
 | `--edge-hi` -> `--shadow-edge-hi` | askesis | alias kept |
 | `--edge-hi-soft` -> `--shadow-edge-hi-soft` | askesis | alias kept |
 | `--edge-lo` -> `--shadow-edge-lo` | askesis | alias kept |
-| `--fab` -> `--fab-size` | askesis | the name collided with the `.fab` class; alias kept |
+| `--fab` -> `--fab-size` | askesis | the name collided with the `.hx-fab` class; alias kept |
 | `--report-warn` (`#e0a39a`) merged with `--warn` | both | same value; `--report-warn` now points to `--warn` |
 | `--report-bad` (`#c0392b`) merged with `--bad` | both | same value; `--report-bad` now points to `--bad` |
 | `--report-bad-line` (`#8f5a53`) merged with `--bad-line` | both | same value; `--report-bad-line` now points to `--bad-line` |
@@ -89,7 +105,7 @@ Every old name still resolves through a deprecated alias in `src/tokens.css` (ma
 | token | value | source | purpose |
 | --- | --- | --- | --- |
 | `--font-sans` | `'DM Sans Variable', 'DM Sans', 'Segoe UI', Arial, sans-serif` | both | the only typeface |
-| `--font-serif` | `var(--font-sans)` | pantheon | display slot (headings, faceted buttons); DM Sans by decision |
+| `--font-serif` | `var(--font-sans)` | pantheon | alias of `--font-sans` for old display-font references; DM Sans by decision, nothing renders serif |
 | `--font-mono` | `ui-monospace, 'Cascadia Code', 'Segoe UI Mono', Consolas, monospace` | pantheon | code |
 | `--fs-micro` | `0.66rem` | askesis | eyebrow / micro caps (0.2em, 600, gold) |
 | `--fs-head` | `0.62rem` | askesis | column heads, field labels (0.14em, caps, muted) |
@@ -98,11 +114,11 @@ Every old name still resolves through a deprecated alias in `src/tokens.css` (ma
 | `--fs-title` | `1.0625rem` | askesis | card and list titles |
 | `--fs-h4` | `1rem` | new | h4 below 1100px |
 | `--fs-h4-lg` | `1.1rem` | pantheon | h4 from 1100px |
-| `--fs-h3` | `1.125rem` | new | h3 below 1100px |
+| `--fs-h3` | `1.125rem` | new | h3 below 1100px (Pantheon override, see Decisions) |
 | `--fs-h3-lg` | `1.5rem` | pantheon | h3 from 1100px |
-| `--fs-h2` | `1.375rem` | askesis | h2 below 1100px |
+| `--fs-h2` | `1.375rem` | askesis | h2 below 1100px (Pantheon override, see Decisions) |
 | `--fs-h2-lg` | `1.85rem` | pantheon | h2 from 1100px |
-| `--fs-h1` | `1.875rem` | askesis | h1 below 1100px |
+| `--fs-h1` | `1.875rem` | askesis | h1 below 1100px (Pantheon override, see Decisions) |
 | `--fs-h1-lg` | `clamp(2.8rem, 4.6vw, 4.6rem)` | pantheon | h1 from 1100px |
 | `--fs-value` | `2.25rem` | askesis | big numeric readouts |
 | `--lh-tight` | `1.15` | pantheon | heading line height |
@@ -161,7 +177,7 @@ Flat by design: hard edges, no glossy gradients. Derived from the askesis depth 
 | `--dur-slow` | `250ms` | pantheon | nav hover, sheet in, bar fills (Pantheon uses 0.2-0.25s) |
 | `--ease` | `cubic-bezier(.2, .7, .2, 1)` | askesis | all transitions |
 
-All motion is reduced under `prefers-reduced-motion: reduce` (base.css), and shimmer/spinner
+All motion is reduced under `prefers-reduced-motion: reduce` by the opt-in base (`helix-base.css`), and shimmer/spinner
 animations only run under `prefers-reduced-motion: no-preference`.
 
 ### Focus ring
@@ -169,7 +185,7 @@ animations only run under `prefers-reduced-motion: no-preference`.
 | token | value | source | purpose |
 | --- | --- | --- | --- |
 | `--focus-ring-width` | `2px` | both | `:focus-visible` outline width |
-| `--focus-ring-offset` | `2px` | askesis | outline offset (Pantheon links used 4px) |
+| `--focus-ring-offset` | `4px` | pantheon | outline offset (Pantheon `outline-offset: 4px`; Askesis used 2px) |
 | `--focus-ring-color` | `var(--gold-bright)` | both | outline colour |
 
 ### Z-index
@@ -199,7 +215,7 @@ animations only run under `prefers-reduced-motion: no-preference`.
 
 | token | value | source | purpose |
 | --- | --- | --- | --- |
-| `--meander` | `url("data:image/svg+xml;base64,…")` | pantheon | Greek-key tile for friezes (`.ornament`, ornament card, report) |
+| `--meander` | `url("data:image/svg+xml;base64,…")` | pantheon | Greek-key tile for friezes (`.hx-ornament`, ornament card, report) |
 | `--meander-h` | `14px` | pantheon | frieze height |
 | `--meander-h-long` | `clamp(18px, 2.2vw, 26px)` | pantheon | wide frieze height |
 

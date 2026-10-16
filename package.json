@@ -11,11 +11,13 @@
   "exports": {
     ".": "./dist/helix-design.css",
     "./css": "./dist/helix-design.css",
+    "./base.css": "./dist/helix-base.css",
     "./tokens.css": "./src/tokens.css",
     "./switcher.js": "./src/switcher.js",
     "./report.css": "./dist/pantheon-report.css",
     "./dist/*": "./dist/*",
     "./fonts/*": "./dist/fonts/*",
+    "./fonts/OFL.txt": "./dist/fonts/OFL.txt",
     "./src/*": "./src/*",
     "./package.json": "./package.json"
   },
@@ -24,7 +26,8 @@
     "src",
     "demo",
     "README.md",
-    "TOKENS.md"
+    "TOKENS.md",
+    "LICENSE"
   ],
   "sideEffects": [
     "*.css",

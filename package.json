@@ -3,6 +3,34 @@
   "version": "0.1.0",
   "description": "Pantheon visual language for the Helix umbrella: design tokens and framework-agnostic CSS components.",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProgFroz/helix-design.git"
+  },
+  "style": "./dist/helix-design.css",
+  "main": "./src/switcher.js",
+  "exports": {
+    ".": "./dist/helix-design.css",
+    "./css": "./dist/helix-design.css",
+    "./tokens.css": "./src/tokens.css",
+    "./switcher.js": "./src/switcher.js",
+    "./report.css": "./dist/pantheon-report.css",
+    "./dist/*": "./dist/*",
+    "./fonts/*": "./dist/fonts/*",
+    "./src/*": "./src/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "demo",
+    "README.md",
+    "TOKENS.md"
+  ],
+  "sideEffects": [
+    "*.css",
+    "./src/switcher.js"
+  ],
   "scripts": {
     "test": "node scripts/check.js",
     "build": "node scripts/build && node scripts/build-report-theme"

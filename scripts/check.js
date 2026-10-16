@@ -20,7 +20,6 @@ const LOCAL_PROPERTIES = {
   '--value': ['src/components/progress.css'],
   '--ring-size': ['src/components/progress.css'],
   '--ring-width': ['src/components/progress.css'],
-  '--sq': ['src/components/stepper.css'],
   '--main-gutter': ['src/report/report.css'],
 };
 // var(--x, fallback) is NOT exempt from check 1: no documented exemptions exist.
@@ -47,7 +46,7 @@ function listCss(dir) {
 
 function declaredProps(css) {
   const set = new Set();
-  for (const m of stripComments(css).matchAll(/(--[A-Za-z0-9_-]+)\s*:/g)) set.add(m[1]);
+  for (const m of stripComments(css).matchAll(/(?:^|[{;\s])(--[A-Za-z0-9_-]+)\s*:/g)) set.add(m[1]);
   return set;
 }
 
@@ -74,6 +73,21 @@ function classSelectors(css) {
     for (const m of p.matchAll(/\.(-?[A-Za-z_][A-Za-z0-9_-]*)/g)) set.add(`.${m[1]}`);
   }
   return set;
+}
+
+// Split a selector list on top-level commas (commas inside :is()/:not() stay).
+function splitSelectorList(selector) {
+  const parts = [];
+  let depth = 0;
+  let start = 0;
+  for (let i = 0; i < selector.length; i++) {
+    const ch = selector[i];
+    if (ch === '(') depth++;
+    else if (ch === ')') depth--;
+    else if (ch === ',' && depth === 0) { parts.push(selector.slice(start, i)); start = i + 1; }
+  }
+  parts.push(selector.slice(start));
+  return parts.map((p) => p.trim());
 }
 
 // Rules as { selector, body } pairs (flat; at-rule preludes are skipped).
@@ -201,7 +215,7 @@ check('3. button variants a/b/c/e (+ default to e) in CSS, switcher and demo', (
   assert.ok(css.includes(DEFAULT_E), `missing default-to-e selector ${DEFAULT_E}`);
   // every E rule must also apply by default, so E and the default never drift apart
   for (const s of sel.filter((x) => x.includes('[data-btn="e"]'))) {
-    for (const part of s.split(/,(?![^(]*\))/)) {
+    for (const part of splitSelectorList(s)) {
       if (part.includes('[data-btn="e"]')) assert.ok(part.includes(DEFAULT_E), `E selector without default: ${part.trim()}`);
     }
   }
@@ -223,7 +237,7 @@ check('4. dist/ is byte-identical to a fresh build of src/', () => {
   assert.equal(build(), fresh, 'build is not deterministic');
   assert.ok(read('dist/helix-design.css') === fresh, 'dist/helix-design.css is stale: run `npm run build`');
   assert.ok(read('dist/pantheon-report.css') === report, 'dist/pantheon-report.css is stale: run `npm run build`');
-  assert.ok(!/base64,/.test(fresh), 'helix-design.css must not embed base64 fonts');
+  assert.ok(!/data:font\//.test(fresh), 'helix-design.css must not embed fonts as data URIs');
   assert.match(fresh, /url\(['"]?fonts\/dm-sans-latin-wght-normal\.woff2['"]?\)/);
   assert.match(report, /url\(data:font\/woff2;base64,[A-Za-z0-9+/=]{1000,}\)/);
   assert.match(report, /generated from helix-design; do not edit by hand/);

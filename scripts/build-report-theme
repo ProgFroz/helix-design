@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+// Generates dist/pantheon-report.css: a self-contained drop-in replacement for the
+// hand-maintained Pantheon report theme. Tokens come from src/tokens.css; DM Sans is
+// embedded as a data URI (a report must load nothing else). Plain node, no dependencies.
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+
+const ROOT = path.resolve(__dirname, '..');
+const FONT = 'dist/fonts/dm-sans-latin-wght-normal.woff2';
+const SOURCES = ['src/tokens.css', 'src/report/report-root.css', 'src/report/report.css'];
+const UNICODE_RANGE =
+  'U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,' +
+  'U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD';
+
+function buildReport() {
+  const { version } = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
+  const font = fs.readFileSync(path.join(ROOT, FONT)).toString('base64');
+  const header = `/* Pantheon report skin, generated from helix-design; do not edit by hand.
+   Source of truth: ProgFroz/helix-design v${version}
+                    src/tokens.css + src/report/*.css, built by scripts/build-report-theme
+   Token table: TOKENS.md in helix-design.
+   Drop-in replacement for the hand-maintained pantheon-report.css v2 (2026-10-15): same class
+   names and custom properties, DM Sans embedded as data URI (the iframe in Pantheon cannot load
+   the app font), compact mode for the Pantheon iframe (600 px tall) and narrow windows. */
+`;
+  const fontFace = `@font-face {
+  font-family: 'DM Sans Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 1000;
+  src: url(data:font/woff2;base64,${font}) format('woff2-variations');
+  unicode-range: ${UNICODE_RANGE};
+}
+`;
+  const parts = SOURCES.map((file) => fs.readFileSync(path.join(ROOT, file), 'utf8').replace(/\s+$/, '') + '\n');
+  return [header, fontFace, ...parts].join('\n');
+}
+
+if (require.main === module) {
+  const out = path.join(ROOT, 'dist', 'pantheon-report.css');
+  fs.mkdirSync(path.dirname(out), { recursive: true });
+  fs.writeFileSync(out, buildReport());
+  console.log(`wrote ${path.relative(ROOT, out)}`);
+}
+
+module.exports = { buildReport };

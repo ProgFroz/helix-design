@@ -1,0 +1,43 @@
+/* Toasts: short, non-blocking messages above the bottom nav (bottom-right on desktop).
+   Info: role="status"; error: .hx-toast--error + role="alert". */
+.hx-toast-region {
+  position: fixed;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: calc(var(--bnav-h) + var(--space-4) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+.hx-toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: var(--tap);
+  padding: 6px 6px 6px var(--space-4);
+  background: var(--panel-alt);
+  border: var(--border-width) solid var(--line-gold);
+  color: var(--ivory);
+  font-size: 0.86rem;
+  line-height: 1.4;
+  box-shadow: var(--shadow-float);
+  pointer-events: auto;
+}
+.hx-toast::before {
+  content: '';
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: var(--radius-round);
+  background: var(--gold);
+}
+.hx-toast__text { flex: 1; min-width: 0; padding: 6px 0; }
+.hx-toast--error { border-color: var(--bad-line); }
+.hx-toast--error::before { background: var(--bad); }
+.hx-toast--error .hx-toast__text { color: var(--warn); }
+
+@media (min-width: 1100px) {
+  .hx-toast-region { left: auto; right: var(--space-6); bottom: var(--space-6); width: 420px; }
+}

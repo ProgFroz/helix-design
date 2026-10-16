@@ -1,0 +1,145 @@
+/* helix-design tokens: the only file that defines design tokens.
+   Pantheon wins on conflicts (dark, gold accent, radius 0, DM Sans).
+   Every token is documented in TOKENS.md. Deprecated aliases keep older names resolving. */
+
+:root {
+  color-scheme: dark;
+
+  /* ---------- colour: surfaces ---------- */
+  --stone: #0a0a0b;
+  --panel: #121214;
+  --panel-alt: #17171a;
+  --sidebar: #0d0d0f;
+  --scrim: #000000a6;
+
+  /* ---------- colour: lines ---------- */
+  --line: #26262b;
+  --line-gold: #3f3524;
+
+  /* ---------- colour: gold accent ---------- */
+  --gold: #c9a24e;
+  --gold-bright: #e8cb7f;
+  --gold-deep: #8e7439;
+  --gold-edge: #6e5a2c;
+  --gold-wash: #c9a24e14;
+  --gold-sheen: linear-gradient(115deg, transparent 38%,
+    color-mix(in srgb, var(--gold-bright) 42%, transparent) 50%, transparent 62%);
+
+  /* ---------- colour: text ---------- */
+  --ivory: #f1ede4;
+  --muted: #a6a39c;
+  --fg-disabled: #6b6964;
+
+  /* ---------- colour: error (the only semantic hue) ---------- */
+  --bad: #c0392b;
+  --bad-line: #8f5a53;
+  --bad-edge: #7a2219;
+  --warn: #e0a39a;
+
+  /* ---------- typography ---------- */
+  --font-sans: 'DM Sans Variable', 'DM Sans', 'Segoe UI', Arial, sans-serif;
+  --font-serif: var(--font-sans);
+  --font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', Consolas, monospace;
+  --fs-micro: 0.66rem;
+  --fs-head: 0.62rem;
+  --fs-small: 0.75rem;
+  --fs-body: 0.9375rem;
+  --fs-title: 1.0625rem;
+  --fs-h4: 1rem;
+  --fs-h4-lg: 1.1rem;
+  --fs-h3: 1.125rem;
+  --fs-h3-lg: 1.5rem;
+  --fs-h2: 1.375rem;
+  --fs-h2-lg: 1.85rem;
+  --fs-h1: 1.875rem;
+  --fs-h1-lg: clamp(2.8rem, 4.6vw, 4.6rem);
+  --fs-value: 2.25rem;
+  --lh-tight: 1.15;
+  --lh-body: 1.6;
+  --tracking-caps: 0.14em;
+  --tracking-micro: 0.2em;
+
+  /* ---------- spacing (4-based) ---------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 44px;
+  --gutter: 18px;
+  --gutter-lg: clamp(24px, 5vw, 80px);
+
+  /* ---------- shape ---------- */
+  --radius-none: 0;
+  --radius-round: 50%;
+  --facet: 6px;
+  --border-width: 1px;
+
+  /* ---------- shadow (flat: hard edges, no glossy gradients) ---------- */
+  --shadow-edge-hi: inset 0 1px 0 #ffffff2e;
+  --shadow-edge-hi-soft: inset 0 1px 0 #c9a24e1f;
+  --shadow-edge-lo: inset 0 -1px 0 #00000059;
+  --shadow-drop: 0 1px 0 #000000cc, 0 3px 8px -2px #000000a6;
+  --shadow-press: inset 0 2px 5px #00000080;
+  --shadow-float: 0 6px 16px -4px #000000;
+  --shadow-halo: 0 0 0 4px #0a0a0bcc;
+  --shadow-sheet: 0 -8px 24px -8px #000000cc;
+  --shadow-inset: inset 0 1px 3px #00000066;
+
+  /* ---------- motion ---------- */
+  --dur-fast: 120ms;
+  --dur: 160ms;
+  --dur-slow: 250ms;
+  --ease: cubic-bezier(.2, .7, .2, 1);
+
+  /* ---------- focus ring ---------- */
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 4px;
+  --focus-ring-color: var(--gold-bright);
+
+  /* ---------- z-index ---------- */
+  --z-base: 0;
+  --z-raised: 1;
+  --z-sticky: 4;
+  --z-nav: 20;
+  --z-fab: 21;
+  --z-scrim: 30;
+  --z-sheet: 40;
+  --z-dialog: 45;
+  --z-toast: 60;
+
+  /* ---------- touch and layout sizes ---------- */
+  --tap: 48px;
+  --tap-xl: 64px;
+  --fab-size: 56px;
+  --bnav-h: 64px;
+  --sidebar-w: 256px;
+  --content-max: 1500px;
+
+  /* ---------- ornament: meander frieze (self-contained data URI, byte-identical SVG) ---------- */
+  --meander: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNCAyMCIgZmlsbD0ibm9uZSIgYXJpYS1oaWRkZW49InRydWUiPgogIDxnIHN0cm9rZT0iI2M5YTI0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWpvaW49Im1pdGVyIiBzdHJva2UtbGluZWNhcD0iYnV0dCI+CiAgICA8cGF0aCBkPSJNMCAyaDE0TTAgMThoMTQiIC8+CiAgICA8cGF0aCBkPSJNMCAxNEgyLjVWNmg5djRIN3Y0aDciIC8+CiAgPC9nPgo8L3N2Zz4K");
+  --meander-h: 14px;
+  --meander-h-long: clamp(18px, 2.2vw, 26px);
+
+  /* ---------- deprecated aliases (resolve old names; see TOKENS.md) ---------- */
+  --sans: var(--font-sans);
+  --serif: var(--font-serif);
+  --mono: var(--font-mono);
+  --s-1: var(--space-1);
+  --s-2: var(--space-2);
+  --s-3: var(--space-3);
+  --s-4: var(--space-4);
+  --s-5: var(--space-5);
+  --s-6: var(--space-6);
+  --s-7: var(--space-7);
+  --s-8: var(--space-8);
+  --radius: var(--radius-none);
+  --drop: var(--shadow-drop);
+  --press: var(--shadow-press);
+  --edge-hi: var(--shadow-edge-hi);
+  --edge-hi-soft: var(--shadow-edge-hi-soft);
+  --edge-lo: var(--shadow-edge-lo);
+  --fab: var(--fab-size);
+}

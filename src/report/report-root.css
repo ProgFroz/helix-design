@@ -1,0 +1,16 @@
+/* Report-only root: semantic report tones + document defaults of the report skin.
+   The app has exactly one semantic red and no green: "fine" is the theme's own gold, warn is
+   its alert-text tone, bad is its error tone. Never invent a colour outside this ladder in a report. */
+:root {
+  --report-ok: var(--gold);
+  --report-warn: var(--warn);
+  --report-bad: var(--bad);
+  --report-bad-line: var(--bad-line);
+  font-family: var(--font-sans);
+  background: var(--stone);
+  color: var(--ivory);
+  scrollbar-color: var(--gold-deep) var(--stone);
+  font-synthesis: none;
+  font-feature-settings: 'lnum' 1;
+  -webkit-font-smoothing: antialiased;
+}

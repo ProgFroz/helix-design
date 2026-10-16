@@ -1,0 +1,86 @@
+/* Inputs: .hx-field wraps label, control, hint and error. .hx-input styles input, select and textarea. */
+.hx-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.hx-field__label {
+  font-size: var(--fs-head);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.hx-field__hint,
+.hx-field__error {
+  margin: 0;
+  font-size: var(--fs-small);
+  line-height: 1.4;
+  color: var(--muted);
+}
+.hx-field__error { color: var(--warn); }
+
+.hx-input {
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-height: var(--tap);
+  margin: 0;
+  padding: 0 var(--space-3);
+  background: var(--panel-alt);
+  border: var(--border-width) solid var(--line);
+  border-radius: var(--radius-none);
+  color: var(--ivory);
+  font: inherit;
+  font-size: 1rem;
+  transition: border-color var(--dur) var(--ease);
+}
+.hx-input::placeholder { color: var(--muted); opacity: 0.75; }
+@media (hover: hover) {
+  .hx-input:hover { border-color: var(--line-gold); }
+}
+.hx-input:focus,
+.hx-input.hx-is-focus { border-color: var(--gold); }
+
+textarea.hx-input {
+  min-height: calc(var(--tap) * 2);
+  padding: var(--space-3);
+  line-height: 1.5;
+  resize: vertical;
+}
+.hx-input[type='number'] { font-variant-numeric: tabular-nums lining-nums; }
+
+.hx-input[aria-invalid='true'],
+.hx-field.hx-is-invalid .hx-input { border-color: var(--bad-line); }
+.hx-input[aria-invalid='true']:focus,
+.hx-field.hx-is-invalid .hx-input:focus { border-color: var(--bad); }
+
+.hx-input:disabled,
+.hx-input.hx-is-disabled {
+  background: var(--stone);
+  border-color: var(--line);
+  color: var(--fg-disabled);
+  cursor: not-allowed;
+}
+.hx-field.hx-is-disabled .hx-field__label { color: var(--fg-disabled); }
+
+/* select: wrap the <select class="input"> in .hx-select for the chevron */
+.hx-select { position: relative; display: block; }
+.hx-select > .hx-input { padding-right: 40px; cursor: pointer; }
+.hx-select::after {
+  content: '';
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--gold);
+  border-bottom: 1.5px solid var(--gold);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+.hx-select:has(> .hx-input:disabled)::after { border-color: var(--fg-disabled); }
+select.hx-input option { background: var(--panel); color: var(--ivory); }

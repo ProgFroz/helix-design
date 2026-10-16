@@ -1,0 +1,46 @@
+/* FAB: square gold action above the bottom nav (right-thumb zone). Flat fill, hard edges. */
+.hx-fab {
+  position: fixed;
+  right: var(--gutter);
+  bottom: calc(var(--bnav-h) + var(--space-4) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--z-fab);
+  display: grid;
+  place-items: center;
+  width: var(--fab-size);
+  height: var(--fab-size);
+  padding: 0;
+  background: var(--gold);
+  border: var(--border-width) solid var(--gold-bright);
+  border-radius: var(--radius-none);
+  color: var(--stone);
+  font: inherit;
+  cursor: pointer;
+  box-shadow: var(--shadow-edge-hi), var(--shadow-edge-lo), var(--shadow-halo), var(--shadow-float);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+.hx-fab svg { width: 26px; height: 26px; stroke: currentColor; stroke-width: 2; fill: none; }
+.hx-fab:is(:active, .hx-is-pressed) {
+  box-shadow: var(--shadow-press), var(--shadow-halo);
+  transform: translateY(1px);
+}
+.hx-fab:is(:disabled, [aria-disabled='true']) {
+  background: var(--panel-alt);
+  border-color: var(--line);
+  color: var(--fg-disabled);
+  box-shadow: var(--shadow-halo);
+  transform: none;
+  cursor: not-allowed;
+}
+.hx-fab--extended {
+  width: auto;
+  grid-auto-flow: column;
+  gap: var(--space-2);
+  padding: 0 var(--space-4) 0 var(--space-3);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+.hx-fab[hidden] { display: none; }
+
+@media (min-width: 1100px) {
+  .hx-fab { right: var(--space-6); bottom: var(--space-6); }
+}

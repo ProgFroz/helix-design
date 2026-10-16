@@ -1,0 +1,99 @@
+/* Typography helpers and the .hx scope. Element typography (h1-h4, p, a, ...) is the opt-in
+   base (src/base.css -> dist/helix-base.css). */
+
+/* Optional scope root: DM Sans and ivory text for a subtree, without the global base. */
+.hx {
+  font-family: var(--font-sans);
+  color: var(--ivory);
+  font-synthesis: none;
+  font-feature-settings: 'lnum' 1;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Components size with border-box on their own, so they need no global reset.
+   :where() keeps this at zero specificity. */
+:where(.hx-btn, .hx-icon-btn, .hx-stepper, .hx-stepper__value, .hx-field, .hx-input, .hx-select,
+  .hx-chip, .hx-pill, .hx-segmented, .hx-segmented__item, .hx-card, .hx-list, .hx-list-row,
+  .hx-list-row__lead, .hx-list-divider, .hx-app-shell, .hx-app-shell__main, .hx-bottom-nav,
+  .hx-bottom-nav__item, .hx-side-nav, .hx-side-nav__item, .hx-fab, .hx-scrim, .hx-sheet, .hx-dialog,
+  .hx-toast-region, .hx-toast, .hx-empty, .hx-notice, .hx-skeleton, .hx-spinner, .hx-progress-ring,
+  .hx-progress-bar, .hx-ornament),
+:where(.hx-btn, .hx-select, .hx-card, .hx-progress-ring, .hx-progress-bar, .hx-skeleton, .hx-toast,
+  .hx-notice__title)::before,
+:where(.hx-btn, .hx-select, .hx-skeleton)::after { box-sizing: border-box; }
+
+.hx-eyebrow {
+  display: block;
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-micro);
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hx-muted { color: var(--muted); }
+
+.hx-num { font-variant-numeric: tabular-nums lining-nums; }
+
+/* gold emphasis without italics (Pantheon's former global em rule, now opt-in) */
+.hx-em { font-style: normal; color: var(--gold-bright); }
+
+.hx-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Meander frieze: a rare highlight, decorative only. */
+.hx-ornament {
+  display: block;
+  height: var(--meander-h);
+  border: 0;
+  margin: 0;
+  background: var(--meander) 0 0 / auto 100% repeat-x;
+}
+.hx-ornament--wide { height: var(--meander-h-long); }
+
+.hx-lede {
+  margin: 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: var(--lh-body);
+}
+
+.hx-caps {
+  font-size: var(--fs-head);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.hx-count {
+  font-size: var(--fs-micro);
+  letter-spacing: var(--tracking-micro);
+  font-weight: 600;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.hx-readout {
+  font-size: var(--fs-value);
+  line-height: 1;
+  font-weight: 500;
+  color: var(--gold-bright);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.hx-readout small {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: var(--space-1);
+}

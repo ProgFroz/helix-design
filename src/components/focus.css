@@ -1,0 +1,9 @@
+/* Focus ring: gold-bright, 2px, offset 4px, keyboard focus only. Each focusable hx- component
+   carries the ring itself, so it stays accessible without the opt-in base (buttons: buttons.css).
+   .hx-is-focus renders the same ring statically (demos, screenshots). */
+.hx-is-focus,
+:is(.hx-icon-btn, .hx-chip, .hx-segmented__item, .hx-card--interactive, .hx-list-row--interactive, .hx-bottom-nav__item,
+  .hx-side-nav__brand, .hx-side-nav__item, .hx-fab, .hx-input):focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}

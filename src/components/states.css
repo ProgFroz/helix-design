@@ -1,0 +1,72 @@
+/* Empty, loading (skeleton, spinner) and error states. */
+.hx-empty {
+  padding: var(--space-6) var(--space-4) var(--space-5);
+  border: var(--border-width) dashed var(--line);
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+  text-align: center;
+}
+.hx-empty__title { display: block; margin-bottom: 6px; color: var(--ivory); font-size: 0.98rem; font-weight: 500; }
+.hx-empty__actions { display: flex; justify-content: center; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-4); }
+
+.hx-notice {
+  padding: var(--space-4);
+  background: var(--panel);
+  border: var(--border-width) solid var(--line);
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+.hx-notice__title { display: block; margin-bottom: var(--space-1); color: var(--ivory); font-weight: 500; }
+.hx-notice__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.hx-notice--error { border-color: var(--bad-line); }
+.hx-notice--error .hx-notice__title { color: var(--warn); }
+.hx-notice--error .hx-notice__title::before {
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin-right: var(--space-2);
+  border-radius: var(--radius-round);
+  background: var(--bad);
+  vertical-align: middle;
+}
+
+/* skeleton: shimmer only when motion is welcome */
+.hx-skeleton {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  background: var(--panel-alt);
+}
+.hx-skeleton--line { height: 12px; margin: 6px 0; }
+.hx-skeleton--title { height: 22px; width: 60%; margin: 6px 0; }
+.hx-skeleton--block { height: 64px; }
+.hx-skeleton--circle { border-radius: var(--radius-round); aspect-ratio: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .hx-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--gold) 7%, transparent) 50%, transparent 70%);
+    background-size: 220% 100%;
+    animation: helix-shimmer 1.6s ease-in-out infinite;
+  }
+}
+@keyframes helix-shimmer { from { background-position: 140% 0; } to { background-position: -40% 0; } }
+
+.hx-spinner {
+  display: inline-block;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--line-gold);
+  border-top-color: var(--gold);
+  border-radius: var(--radius-round);
+  vertical-align: middle;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hx-spinner { animation: helix-spin 0.8s linear infinite; }
+}
+@keyframes helix-spin { to { transform: rotate(360deg); } }

@@ -1,0 +1,59 @@
+/* Story layout helpers (sb- prefix only); not part of the library. Ported from the old demo page. */
+.sb-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: flex-start; }
+.sb-grid { display: grid; gap: var(--space-4); grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.sb-grid--wide { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+.sb-grid--swatches { grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); }
+.sb-stack { display: grid; gap: var(--space-4); max-width: 520px; }
+.sb-narrow { max-width: 390px; }
+.sb-label { display: block; margin: var(--space-6) 0 var(--space-2); }
+.sb-label:first-child { margin-top: 0; }
+.sb-note { font-size: var(--fs-small); color: var(--muted); margin: var(--space-3) 0 0; max-width: 760px; }
+.sb-inline { display: flex; gap: var(--space-4); align-items: center; }
+.sb-grow { flex: 1; }
+.sb-gap-top { margin-top: var(--space-4); }
+.sb-block { display: block; }
+
+/* tokens page */
+.sb-swatch { border: 1px solid var(--line); background: var(--panel); }
+.sb-swatch i { display: block; height: 56px; border-bottom: 1px solid var(--line); }
+.sb-swatch div { padding: var(--space-2) var(--space-3); font-size: var(--fs-small); overflow-wrap: anywhere; }
+.sb-swatch code { display: block; color: var(--ivory); }
+.sb-swatch span { display: block; color: var(--muted); }
+.sb-table { width: 100%; max-width: 980px; border-collapse: collapse; font-size: 0.8rem; }
+.sb-table th, .sb-table td { text-align: left; padding: var(--space-2) var(--space-3) var(--space-2) 0; border-bottom: 1px solid var(--line); vertical-align: middle; }
+.sb-table th { font-size: var(--fs-head); letter-spacing: var(--tracking-caps); text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.sb-table td:nth-child(2) { color: var(--muted); max-width: 360px; overflow-wrap: anywhere; }
+.sb-bar { display: block; height: 10px; background: var(--gold-deep); }
+.sb-box { width: 120px; height: 64px; background: var(--panel-alt); border: 1px solid var(--line); }
+
+/* framed stages: fixed-position components are pinned to the frame, not the viewport */
+.sb-stage { position: relative; overflow: hidden; border: 1px solid var(--line-gold); background: var(--stone); }
+.sb-stage :is(.hx-bottom-nav, .hx-fab, .hx-scrim, .hx-sheet, .hx-dialog, .hx-toast-region) { position: absolute; }
+.sb-stage .hx-app-shell { min-height: 0; height: 100%; }
+.sb-stage .hx-side-nav { height: 100%; position: static; }
+.sb-stage--fab { width: 140px; height: 140px; }
+.sb-stage--fab .hx-fab { right: 40px; bottom: 40px; }
+.sb-stage--fab-wide { width: 220px; }
+.sb-stage--fab-wide .hx-fab { right: 30px; }
+.sb-stage--mobile { width: 390px; max-width: 100%; height: 560px; }
+.sb-stage--mobile .hx-app-shell { display: block; }
+.sb-stage--mobile .hx-side-nav { display: none; }
+.sb-stage--mobile .hx-bottom-nav { display: grid; }
+.sb-stage--mobile .hx-app-shell__main { padding: var(--space-5) var(--gutter) calc(var(--bnav-h) + var(--space-5)); }
+.sb-stage--desktop { width: 1120px; height: 520px; }
+.sb-stage--desktop .hx-app-shell { display: grid; grid-template-columns: var(--sidebar-w) minmax(0, 1fr); }
+.sb-stage--desktop .hx-side-nav { display: flex; }
+.sb-stage--desktop .hx-bottom-nav { display: none; }
+.sb-stage--desktop .hx-app-shell__main { padding: var(--space-7); }
+.sb-stage--sheet { width: 390px; max-width: 100%; height: 520px; }
+.sb-stage--dialog { width: 520px; max-width: 100%; height: 360px; }
+.sb-stage--dialog .hx-dialog { width: min(calc(100% - 2 * var(--gutter)), 440px); }
+.sb-stage--toast { width: 390px; max-width: 100%; height: 220px; }
+.sb-stage--toast .hx-toast-region { bottom: var(--space-4); left: var(--gutter); right: var(--gutter); width: auto; }
+.sb-scroll { overflow-x: auto; padding-bottom: var(--space-2); }
+
+/* skeleton sizes (the library leaves widths to the layout) */
+.sb-avatar { width: 64px; flex: none; }
+.sb-avatar--sm { width: 40px; }
+.sb-w-80 { width: 80%; }
+.sb-w-55 { width: 55%; }

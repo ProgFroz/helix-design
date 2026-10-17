@@ -848,8 +848,10 @@ check('17. deploy artifacts: Dockerfile, Caddyfile, docs/deploy.md; no railway c
   assert.match(docker, /^COPY\s+--from=\w+\s+\S*storybook-static\b/m, 'Dockerfile must copy storybook-static from the build stage');
   assert.match(docker, /^EXPOSE\s+8080\b/m, 'Dockerfile must EXPOSE 8080');
   assert.match(docker, /^ENV\s+PORT=8080\b/m, 'Dockerfile must default PORT to 8080');
-  assert.match(docker, /^HEALTHCHECK\b[^\n]*(?:\\\n[^\n]*)*sh -c[^\n]*(?:\\\n[^\n]*)*http:\/\/127\.0\.0\.1:\$\{PORT:-8080\}\/(?![\w/])/m,
-    'Dockerfile needs a HEALTHCHECK on / that honours $PORT (fallback 8080)');
+  // HEALTHCHECK instruction including its continuation lines; the shell expands ${PORT:-8080} at run time
+  const health = (/^HEALTHCHECK\b(?:[^\n]*\\\n)*[^\n]*/m.exec(docker) || [''])[0];
+  assert.match(health, /(?:\bsh -c\b|"sh",\s*"-c")/, 'Dockerfile HEALTHCHECK must run through sh -c');
+  assert.match(health, /http:\/\/127\.0\.0\.1:\$\{PORT:-8080\}\/(?![\w/])/, 'Dockerfile needs a HEALTHCHECK on / that honours $PORT (fallback 8080)');
   assert.ok(exists('deploy/Caddyfile'), 'deploy/Caddyfile missing');
   const caddy = read('deploy/Caddyfile');
   assert.ok(caddy.includes(':{$PORT:8080}'), 'Caddyfile must listen on :{$PORT:8080}');

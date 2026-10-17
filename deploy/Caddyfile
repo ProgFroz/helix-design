@@ -1,0 +1,32 @@
+# Static server for the helix-design Storybook (storybook-static/).
+# PORT is injected by Railway; SITE_ROOT lets the same file serve a local build.
+{
+	auto_https off
+	admin off
+	persist_config off
+}
+
+:{$PORT:8080} {
+	root * {$SITE_ROOT:/srv}
+	encode zstd gzip
+
+	# Vite output in /assets/ carries a content hash in the file name.
+	@hashed path /assets/*
+	header @hashed Cache-Control "public, max-age=31536000, immutable"
+
+	# Entry points and indexes change with every build.
+	@entry path / /index.html /iframe.html /index.json /project.json
+	header @entry Cache-Control "no-cache"
+
+	# Everything else (sb-manager/, sb-addons/, fonts, favicons) is unhashed.
+	@other not path /assets/* / /index.html /iframe.html /index.json /project.json
+	header @other Cache-Control "public, max-age=3600"
+
+	file_server
+
+	# Errors (404 for unknown paths) must not be cached.
+	handle_errors {
+		header Cache-Control "no-cache"
+		respond "{err.status_code} {err.status_text}"
+	}
+}

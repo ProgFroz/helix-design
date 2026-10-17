@@ -9,8 +9,14 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const ROOT = path.resolve(__dirname, '..');
-// Reference for check 8; HELIX_DESIGN_REFERENCE overrides the path (e.g. in CI or for mutation tests).
-const OLD_REPORT = process.env.HELIX_DESIGN_REFERENCE || '/opt/data/reports/theme/pantheon-report.css';
+// Reference for check 8; HELIX_DESIGN_REFERENCE overrides the path (e.g. in CI or for mutation tests),
+// a relative value resolves against the repo root. scripts/fixtures/pantheon-report.reference.css is
+// the frozen v0.1 reference of the hand-written theme; it is used when the live file is absent.
+const LIVE_REFERENCE = '/opt/data/reports/theme/pantheon-report.css';
+const FIXTURE_REFERENCE = path.join(ROOT, 'scripts/fixtures/pantheon-report.reference.css');
+const OLD_REPORT = process.env.HELIX_DESIGN_REFERENCE
+  ? path.resolve(ROOT, process.env.HELIX_DESIGN_REFERENCE)
+  : !fs.existsSync(LIVE_REFERENCE) && fs.existsSync(FIXTURE_REFERENCE) ? FIXTURE_REFERENCE : LIVE_REFERENCE;
 const VARIANTS = ['a', 'b', 'c', 'e'];
 const DEFAULT_E = ':root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])';
 // The default-E arm sits in :where() so it adds no specificity over [data-btn="e"] (check 14).

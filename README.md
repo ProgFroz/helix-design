@@ -293,9 +293,11 @@ name of the old `/opt/data/reports/theme/pantheon-report.css` must still exist i
 file, unless it is listed below, and every `:root` custom property must resolve (following
 `var()` chains) to the same value. The report keeps its own unprefixed class names and its own
 element rules (including `em`); the `hx-` prefix, the layers and the opt-in base apply to
-`helix-design.css` only. A missing reference file fails the check; set
-`HELIX_DESIGN_REFERENCE=<path>` to point elsewhere, or `HELIX_DESIGN_SKIP_REFERENCE=1` to skip it
-with a visible `SKIPPED` line (exit 0 locally, exit 2 when `CI=1`).
+`helix-design.css` only. `scripts/fixtures/pantheon-report.reference.css` is a frozen copy of the
+v0.1 reference; the check falls back to it when the live file is absent (CI uses it). A missing
+reference file fails the check; set `HELIX_DESIGN_REFERENCE=<path>` (relative to the repo root) to
+point elsewhere, or `HELIX_DESIGN_SKIP_REFERENCE=1` to skip it with a visible `SKIPPED` line
+(exit 0 locally, exit 2 when `CI=1`).
 
 ### Intentional differences
 

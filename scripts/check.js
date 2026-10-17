@@ -818,9 +818,14 @@ check('16. tokens page reads tokens.css', async () => {
   const raw = Object.fromEntries(styleRules(parseCss(css)).flatMap((r) => Object.entries(r.decls)));
   const wrong = parsed.filter((t) => norm(t.value) !== norm(raw[t.name])).map((t) => `${t.name}: ${t.value}`);
   assert.deepEqual(wrong, [], 'parser returns wrong raw values');
+  // edge cases tokens.css does not exercise today: quoted ; and }, a last declaration without ;
+  const edge = parseTokens(':root { --q: "a;b}c"; --u: url(x;y); /* --c: 1px; */ --last: 2px }');
+  assert.deepEqual(edge.map((t) => [t.name, t.value]), [['--q', '"a;b}c"'], ['--u', 'url(x;y)'], ['--last', '2px']],
+    'parser must respect strings, parentheses and comments and keep a last declaration without ;');
   // every token lands in exactly one group; unknown ones in Other
   const groups = groupTokens(parsed);
-  assert.deepEqual(groups.map((g) => g.title), ['Colors', 'Spacing', 'Typography', 'Radius', 'Shadow', 'Other']);
+  assert.deepEqual(groups.map((g) => g.title), ['Colors', 'Spacing', 'Typography', 'Radius', 'Shadow', 'Other'],
+    'token groups must be Colors, Spacing, Typography, Radius, Shadow, Other');
   const grouped = groups.flatMap((g) => g.tokens.map((t) => t.name));
   assert.deepEqual([...grouped].sort(), [...names].sort(), 'grouped tokens != parsed tokens (each exactly once)');
   const groupOf = (n) => groups.find((g) => g.tokens.some((t) => t.name === n))?.title;
@@ -850,6 +855,7 @@ check('17. deploy artifacts: Dockerfile, Caddyfile, docs/deploy.md; no railway c
   assert.match(docker, /^ENV\s+PORT=8080\b/m, 'Dockerfile must default PORT to 8080');
   // HEALTHCHECK instruction including its continuation lines; the shell expands ${PORT:-8080} at run time
   const health = (/^HEALTHCHECK\b(?:[^\n]*\\\n)*[^\n]*/m.exec(docker) || [''])[0];
+  assert.ok(health, 'Dockerfile has no HEALTHCHECK');
   assert.match(health, /(?:\bsh -c\b|"sh",\s*"-c")/, 'Dockerfile HEALTHCHECK must run through sh -c');
   assert.match(health, /http:\/\/127\.0\.0\.1:\$\{PORT:-8080\}\/(?![\w/])/, 'Dockerfile needs a HEALTHCHECK on / that honours $PORT (fallback 8080)');
   assert.ok(exists('deploy/Caddyfile'), 'deploy/Caddyfile missing');

@@ -270,13 +270,33 @@ Notes:
   There is no `.hx-is-open` class.
 - **Progress** is CSS-only: set `style="--value: 42"` (0-100) and mirror it in `aria-valuenow`.
 - **Pressed / hover / focus helpers** (`.hx-is-pressed`, `.hx-is-hover`, `.hx-is-focus`) exist for static
-  demos and screenshots; real interaction uses `:active`, `:hover`, `:focus-visible`.
+  stories and screenshots; real interaction uses `:active`, `:hover`, `:focus-visible`.
 - **Motion** respects `prefers-reduced-motion`; the skeleton shimmer and spinner only animate
   under `no-preference`.
 - **Touch targets** are at least `--tap` (48px).
 
-The gallery in [`demo/index.html`](demo/index.html) shows every component in every state. It opens
-straight from the file system (`file://`).
+## Storybook
+
+The Storybook shows every component in every state (one story file per component in `stories/`,
+config in `.storybook/`) and a `Foundations/Tokens` page generated from `src/tokens.css`. It is
+dev tooling only: Storybook is a devDependency, and `stories/` and `.storybook/` are not part of the
+published package.
+
+```sh
+npm ci
+npm run storybook         # dev server on http://localhost:6006
+npm run build-storybook   # static site in storybook-static/
+```
+
+- `.storybook/preview.js` loads `dist/helix-design.css` and the opt-in `dist/helix-base.css`
+  globally, like a fully helix-styled page.
+- The **Buttons** toolbar switches the button variant (A, B, C, E; default E) by setting
+  `data-btn` on the preview `<html>`, in stories and on docs pages.
+- The viewport toolbar has 390 (mobile), 1100 (breakpoint) and 1440 (desktop).
+- The backdrop is the dark `--stone` token; there is no light theme.
+
+Hosting: the repo root `Dockerfile` builds the Storybook and serves it with Caddy; the Railway
+service settings are in [docs/deploy.md](docs/deploy.md).
 
 ## Report theme
 
@@ -293,9 +313,11 @@ name of the old `/opt/data/reports/theme/pantheon-report.css` must still exist i
 file, unless it is listed below, and every `:root` custom property must resolve (following
 `var()` chains) to the same value. The report keeps its own unprefixed class names and its own
 element rules (including `em`); the `hx-` prefix, the layers and the opt-in base apply to
-`helix-design.css` only. A missing reference file fails the check; set
-`HELIX_DESIGN_REFERENCE=<path>` to point elsewhere, or `HELIX_DESIGN_SKIP_REFERENCE=1` to skip it
-with a visible `SKIPPED` line (exit 0 locally, exit 2 when `CI=1`).
+`helix-design.css` only. `scripts/fixtures/pantheon-report.reference.css` is a frozen copy of the
+v0.1 reference; the check falls back to it when the live file is absent (CI uses it). A missing
+reference file fails the check; set `HELIX_DESIGN_REFERENCE=<path>` (relative to the repo root) to
+point elsewhere, or `HELIX_DESIGN_SKIP_REFERENCE=1` to skip it with a visible `SKIPPED` line
+(exit 0 locally, exit 2 when `CI=1`).
 
 ### Intentional differences
 
@@ -316,12 +338,17 @@ npm run build   # src/ -> dist/helix-design.css, dist/helix-base.css and dist/pa
 npm test        # node scripts/check.js
 ```
 
-Node 18 or newer; no dependencies. `npm test` checks that every `var(--x)` is a defined token,
-that buttons contain no gradients, the a/b/c/e variants, that `dist/` matches a fresh build, that
-TOKENS.md is complete, the switcher logic, the demo sections, the report parity (names and token
-values), that `helix-design.css` has no unlayered rule, only `hx-` classes and no global element
-selector, the font license, the Pantheon base decisions (focus offset 4px, inheriting links, no
-`em` rule, DM Sans only, heading scale) and that default E weighs the same as A/B/C.
+`npm test` needs Node 18 or newer and nothing installed; Storybook needs Node 20.19+ or 22.12+ and
+`npm ci`. The package has no runtime dependencies. `npm test` checks that every `var(--x)` is a
+defined token, that buttons contain no gradients, the a/b/c/e variants (CSS, switcher and the
+Storybook toolbar), that `dist/` matches a fresh build, that TOKENS.md is complete, the switcher
+logic, that every component has a story, the report parity (names and token values), that
+`helix-design.css` has no unlayered rule, only `hx-` classes and no global element selector (and
+that stories only use classes the library defines), the font license, the Pantheon base
+decisions (focus offset 4px, inheriting links, no `em` rule, DM Sans only, heading scale), that
+default E weighs the same as A/B/C, that the consumer package stays dependency-free, the token
+parser behind the tokens page and the deploy artifacts. CI (`.github/workflows/ci.yml`) runs
+`npm ci`, `npm test` and `npm run build-storybook` on pull requests and on `main`.
 
 ## Versioning
 

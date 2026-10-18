@@ -9,8 +9,14 @@ const path = require('node:path');
 const vm = require('node:vm');
 
 const ROOT = path.resolve(__dirname, '..');
-// Reference for check 8; HELIX_DESIGN_REFERENCE overrides the path (e.g. in CI or for mutation tests).
-const OLD_REPORT = process.env.HELIX_DESIGN_REFERENCE || '/opt/data/reports/theme/pantheon-report.css';
+// Reference for check 8; HELIX_DESIGN_REFERENCE overrides the path (e.g. in CI or for mutation tests),
+// a relative value resolves against the repo root. scripts/fixtures/pantheon-report.reference.css is
+// the frozen v0.1 reference of the hand-written theme; it is used when the live file is absent.
+const LIVE_REFERENCE = '/opt/data/reports/theme/pantheon-report.css';
+const FIXTURE_REFERENCE = path.join(ROOT, 'scripts/fixtures/pantheon-report.reference.css');
+const OLD_REPORT = process.env.HELIX_DESIGN_REFERENCE
+  ? path.resolve(ROOT, process.env.HELIX_DESIGN_REFERENCE)
+  : !fs.existsSync(LIVE_REFERENCE) && fs.existsSync(FIXTURE_REFERENCE) ? FIXTURE_REFERENCE : LIVE_REFERENCE;
 const VARIANTS = ['a', 'b', 'c', 'e'];
 const DEFAULT_E = ':root:not([data-btn="a"]):not([data-btn="b"]):not([data-btn="c"])';
 // The default-E arm sits in :where() so it adds no specificity over [data-btn="e"] (check 14).
@@ -232,6 +238,47 @@ function serifFamilies(css) {
 
 class Skip extends Error {}
 
+// Storybook sources (dev tooling): config in .storybook/, stories in stories/.
+function listFiles(dir, re) {
+  const out = [];
+  if (!exists(dir)) return out;
+  for (const entry of fs.readdirSync(abs(dir), { withFileTypes: true })) {
+    const p = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) out.push(...listFiles(p, re));
+    else if (re.test(entry.name)) out.push(p);
+  }
+  return out.sort();
+}
+const storybookFiles = (re = /\.(?:m?js|css|mdx)$/) => [...listFiles('.storybook', re), ...listFiles('stories', re)];
+const storybookScripts = () => storybookFiles(/\.m?js$/);
+// Static parts of every class="..." attribute in story source; template ${...} expressions are removed.
+function classAttributes(text) {
+  const out = [];
+  const re = /\sclass="/g;
+  let m;
+  while ((m = re.exec(text))) {
+    let value = '';
+    let i = re.lastIndex;
+    while (i < text.length && text[i] !== '"') {
+      if (text[i] === '$' && text[i + 1] === '{') {
+        let depth = 0;
+        for (; i < text.length; i++) {
+          if (text[i] === '{') depth++;
+          else if (text[i] === '}' && --depth === 0) break;
+        }
+        value += ' ';
+      } else value += text[i];
+      i++;
+    }
+    out.push(value);
+    re.lastIndex = i;
+  }
+  return out;
+}
+const importModule = (p) => import(require('node:url').pathToFileURL(abs(p)).href);
+// Anything that would bring back the rejected variant D.
+const VARIANT_D = /data-btn(?:-switch)?=\\?["']d\\?["']|dataset\.btn\s*=\s*["']d["']|value\s*:\s*["']d["']|\bvariant D\b/i;
+
 function tokenSources() {
   const tokens = exists('src/tokens.css') ? declaredProps(read('src/tokens.css')) : new Set();
   const report = exists('src/report/report-root.css') ? declaredProps(read('src/report/report-root.css')) : new Set();
@@ -336,7 +383,7 @@ check('2. no gradients in src/components/buttons.css', () => {
   assert.deepEqual(hits, [], 'buttons.css must stay flat');
 });
 
-check('3. button variants a/b/c/e (+ default to e) in CSS, switcher and demo', () => {
+check('3. button variants a/b/c/e (+ default to e) in CSS, switcher and the Storybook toolbar', async () => {
   const css = stripComments(read('src/components/buttons.css'));
   const sel = rules(css).map((r) => r.selector);
   for (const v of VARIANTS) {
@@ -353,12 +400,22 @@ check('3. button variants a/b/c/e (+ default to e) in CSS, switcher and demo', (
       if (part.includes('[data-btn="e"]')) assert.ok(part.includes(DEFAULT_E), `E selector without default: ${part.trim()}`);
     }
   }
-  assert.ok(!/data-btn="d"|data-btn-switch="d"/.test(css + read('demo/index.html')), 'variant D is rejected');
+  assert.ok(!/data-btn="d"|data-btn-switch="d"/.test(css), 'variant D is rejected');
+  const withD = storybookFiles().filter((f) => VARIANT_D.test(read(f)));
+  assert.deepEqual(withD, [], 'variant D is rejected (Storybook)');
   const { api } = loadSwitcher();
   assert.deepEqual(Array.from(api.VARIANTS), VARIANTS);
-  const demo = read('demo/index.html');
-  const demoValues = [...demo.matchAll(/data-btn-switch="([^"]*)"/g)].map((m) => m[1]);
-  assert.deepEqual([...new Set(demoValues)].sort(), VARIANTS, 'demo switcher must offer exactly a/b/c/e');
+  // the Storybook "Buttons" toolbar offers exactly a/b/c/e, default e
+  assert.ok(exists('.storybook/toolbar.mjs'), '.storybook/toolbar.mjs missing');
+  const toolbar = await importModule('.storybook/toolbar.mjs');
+  assert.deepEqual(toolbar.BUTTON_VARIANTS.map((v) => v.value), VARIANTS, 'Buttons toolbar must offer exactly a/b/c/e');
+  assert.equal(toolbar.DEFAULT_BUTTON_VARIANT, 'e', 'Buttons toolbar default must be e');
+  const preview = exists('.storybook/preview.js') ? read('.storybook/preview.js') : '';
+  assert.match(preview, /from\s+['"]\.\/toolbar\.mjs['"]/, 'preview.js must take the toolbar items from toolbar.mjs');
+  assert.match(preview, /globalTypes\s*:\s*\{\s*btn\s*:[\s\S]*?items\s*:\s*BUTTON_VARIANTS/, 'preview.js: globalTypes.btn toolbar missing');
+  assert.match(preview, /title\s*:\s*['"]Buttons['"]/, 'toolbar must be titled "Buttons"');
+  assert.match(preview, /initialGlobals\s*:\s*\{[\s\S]*?\bbtn\s*:\s*DEFAULT_BUTTON_VARIANT/, 'preview.js: btn must default to DEFAULT_BUTTON_VARIANT');
+  assert.match(preview, /document\.documentElement\.dataset\.btn\s*=/, 'preview.js: decorator must set <html data-btn>');
 });
 
 check('4. dist/ is byte-identical to a fresh build of src/', () => {
@@ -455,19 +512,36 @@ check('6. switcher logic', () => {
   assert.equal(mod.exports.getButtonStyle(), 'e', 'must not throw without a DOM');
 });
 
-check('7. demo has a section per component and works from file://', () => {
-  const demo = read('demo/index.html');
-  const ids = new Set([...demo.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
-  const want = ['switcher', 'tokens', ...listCss('src/components').map((f) => path.basename(f, '.css'))];
-  assert.ok(want.length > 10, 'component files missing');
-  assert.deepEqual(want.filter((id) => !ids.has(id)), [], 'demo sections missing');
-  assert.match(demo, /<link[^>]+href="\.\.\/dist\/helix-design\.css"/);
-  assert.match(demo, /<link[^>]+href="\.\.\/dist\/helix-base\.css"/);
-  assert.match(demo, /<script[^>]+src="\.\.\/src\/switcher\.js"/);
-  assert.ok(!/type="module"/.test(demo), 'module scripts do not load from file://');
-  for (const m of demo.matchAll(/(?:href|src)="(\.\.\/[^"#?]+)"/g)) {
-    assert.ok(fs.existsSync(path.resolve(ROOT, 'demo', m[1])), `demo references missing ${m[1]}`);
+check('7. every component in src/components/ has a story; Storybook config exists', () => {
+  const components = listCss('src/components').map((f) => path.basename(f, '.css'));
+  assert.ok(components.length > 10, 'component files missing');
+  const problems = [];
+  for (const name of components) {
+    const file = `stories/${name}.stories.js`;
+    if (!exists(file)) { problems.push(`${file} missing`); continue; }
+    const text = read(file);
+    if (!/export\s+default\s*\{[\s\S]*?\btitle\s*:\s*['"`][^'"`]+['"`]/.test(text)) problems.push(`${file}: no default export with a title`);
+    if (!/export\s+const\s+[A-Z]\w*\s*=/.test(text)) problems.push(`${file}: no exported story`);
   }
+  assert.deepEqual(problems, [], 'component stories missing');
+  assert.ok(exists('.storybook/main.js'), '.storybook/main.js missing');
+  const main = read('.storybook/main.js');
+  assert.match(main, /framework\s*:\s*['"]@storybook\/html-vite['"]/, 'main.js must use @storybook/html-vite');
+  assert.match(main, /['"]\.\.\/stories\/\*\*\/\*\.stories\.js['"]/, 'main.js must load ../stories/**/*.stories.js');
+  assert.match(main, /disableTelemetry\s*:\s*true/, 'telemetry must be disabled');
+  assert.ok(exists('.storybook/preview.js'), '.storybook/preview.js missing');
+  const preview = read('.storybook/preview.js');
+  assert.match(preview, /^import\s+['"]\.\.\/dist\/helix-design\.css['"]/m, 'preview.js must import ../dist/helix-design.css');
+  assert.match(preview, /^import\s+['"]\.\.\/dist\/helix-base\.css['"]/m, 'preview.js must import ../dist/helix-base.css');
+  // stories and config reference only existing files
+  const broken = [];
+  for (const file of storybookScripts()) {
+    for (const m of read(file).matchAll(/(?:\bfrom\s*|\bimport\s*\(?\s*)['"](\.{1,2}\/[^'"?#]+)/g)) {
+      if (!fs.existsSync(path.resolve(abs(path.dirname(file)), m[1]))) broken.push(`${file}: ${m[1]}`);
+    }
+  }
+  assert.deepEqual(broken, [], 'stories reference missing files');
+  assert.deepEqual(listFiles('src', /\.(stories|mdx)\b/), [], 'stories belong in stories/, not src/');
 });
 
 // Check 8 needs the hand-written reference theme. A missing reference FAILS (exit 1).
@@ -552,11 +626,27 @@ check('10. every class selector in the library CSS starts with hx-', () => {
     }
   }
   assert.deepEqual([...new Set(bad)], []);
-  // the demo only uses classes the library defines (plus its own demo, demo-* layout classes)
+  // stories only use hx- classes the library defines, plus sb- layout classes from .storybook/preview.css
   const defined = new Set(styleRules(parseCss(read('dist/helix-design.css'))).flatMap((r) => selectorClasses(r.selector)));
-  const demo = read('demo/index.html');
-  const used = new Set([...demo.matchAll(/\sclass="([^"]*)"/g)].flatMap((m) => m[1].split(/\s+/).filter(Boolean)));
-  assert.deepEqual([...used].filter((c) => !/^demo(-|$)/.test(c) && !defined.has(c)), [], 'demo uses undefined classes');
+  const previewClasses = exists('.storybook/preview.css') ? [...classSelectors(read('.storybook/preview.css'))].map((c) => c.slice(1)) : [];
+  const local = new Set(previewClasses.filter((c) => c.startsWith('sb-')));
+  // preview.css defines sb- layout classes; it may place library classes inside them, but invents no others
+  const foreign = previewClasses.filter((c) => !local.has(c) && !defined.has(c));
+  assert.deepEqual(foreign, [], '.storybook/preview.css may only define sb- classes');
+  const undefinedClasses = [];
+  for (const file of storybookScripts()) {
+    const text = read(file);
+    // every hx-/sb- name anywhere in a story (class attributes, string literals, ...) must exist
+    for (const m of text.matchAll(/(?<![\w-])hx-[\w-]*/g)) if (!defined.has(m[0])) undefinedClasses.push(`${file}: ${m[0]}`);
+    for (const m of text.matchAll(/(?<![\w-])sb-[\w-]*/g)) if (!local.has(m[0])) undefinedClasses.push(`${file}: ${m[0]}`);
+    // static class attribute names must be hx, hx-* or sb-*; ${...} parts are covered by the scan above
+    for (const value of classAttributes(text)) {
+      for (const c of value.split(/\s+/)) {
+        if (c && c !== 'hx' && !c.startsWith(PREFIX) && !c.startsWith('sb-')) undefinedClasses.push(`${file}: ${c}`);
+      }
+    }
+  }
+  assert.deepEqual([...new Set(undefinedClasses)], [], 'stories use undefined classes');
 });
 
 check('11. helix-design.css sets no global element style; element rules live in helix-base.css', () => {
@@ -666,11 +756,133 @@ check('14. default E has the same specificity as the A/B/C variant selectors', (
   assert.deepEqual(specificity(':is([data-btn="e"],:root:not([a]):not([b])) .x:is(:active,.y)::before'), [0, 5, 1]);
 });
 
+// The published package as of v0.1.0. Storybook is dev tooling and must not change any of this.
+const PINNED_PACKAGE = {
+  style: './dist/helix-design.css',
+  exports: {
+    '.': './dist/helix-design.css',
+    './css': './dist/helix-design.css',
+    './base.css': './dist/helix-base.css',
+    './tokens.css': './src/tokens.css',
+    './switcher.js': './src/switcher.js',
+    './report.css': './dist/pantheon-report.css',
+    './dist/*': './dist/*',
+    './fonts/*': './dist/fonts/*',
+    './fonts/OFL.txt': './dist/fonts/OFL.txt',
+    './src/*': './src/*',
+    './package.json': './package.json',
+  },
+  files: ['dist', 'src', 'demo', 'README.md', 'TOKENS.md', 'LICENSE'],
+  sideEffects: ['*.css', './src/switcher.js'],
+  engines: { node: '>=18' },
+};
+const LIFECYCLE_SCRIPTS = ['preinstall', 'install', 'postinstall', 'prepare', 'prepublish', 'prepublishOnly', 'prepack', 'postpack'];
+const REGISTRY = 'https://registry.npmjs.org/';
+
+check('15. consumer package stays dependency-free', () => {
+  const pkg = JSON.parse(read('package.json'));
+  for (const field of ['dependencies', 'peerDependencies', 'optionalDependencies', 'bundledDependencies', 'bundleDependencies']) {
+    assert.ok(!(field in pkg), `package.json must not have ${field}`);
+  }
+  const lifecycle = LIFECYCLE_SCRIPTS.filter((s) => pkg.scripts && s in pkg.scripts);
+  assert.deepEqual(lifecycle, [], 'package.json must not have lifecycle scripts');
+  for (const [field, value] of Object.entries(PINNED_PACKAGE)) {
+    assert.deepEqual(pkg[field], value, `package.json ${field} differs from the pinned v0.1.0 value`);
+  }
+  const devDeps = Object.keys(pkg.devDependencies || {});
+  const foreign = devDeps.filter((d) => d !== 'storybook' && d !== 'vite' && !d.startsWith('@storybook/'));
+  assert.deepEqual(foreign, [], 'devDependencies may only be storybook, @storybook/* and vite');
+  for (const dir of ['stories', '.storybook', 'storybook-static']) {
+    assert.ok(!pkg.files.some((f) => f.replace(/^\.\//, '').split('/')[0] === dir), `files must not contain ${dir}`);
+  }
+  assert.ok(exists('package-lock.json'), 'package-lock.json missing');
+  const lockText = read('package-lock.json');
+  assert.ok(!/git\+|git:\/\/|ssh:\/\//.test(lockText), 'package-lock.json contains git URLs');
+  const lock = JSON.parse(lockText);
+  const root = lock.packages?.[''] || {};
+  assert.deepEqual(root.devDependencies || {}, pkg.devDependencies || {}, 'package-lock.json is out of sync with devDependencies');
+  assert.ok(!root.dependencies, 'package-lock.json root has runtime dependencies');
+  const foreignUrls = Object.entries(lock.packages || {})
+    .filter(([, p]) => p.resolved && !p.resolved.startsWith(REGISTRY)).map(([k, p]) => `${k}: ${p.resolved}`);
+  assert.deepEqual(foreignUrls, [], `package-lock.json resolves outside ${REGISTRY}`);
+});
+
+check('16. tokens page reads tokens.css', async () => {
+  assert.ok(exists('.storybook/tokens.mjs'), '.storybook/tokens.mjs (token parser) missing');
+  const { parseTokens, groupTokens } = await importModule('.storybook/tokens.mjs');
+  const css = read('src/tokens.css');
+  const parsed = parseTokens(css);
+  const names = parsed.map((t) => t.name);
+  assert.deepEqual(names.filter((n, i) => names.indexOf(n) !== i), [], 'parser reports tokens twice');
+  assert.deepEqual([...names].sort(), [...declaredProps(css)].sort(), 'parser output != custom properties of tokens.css');
+  const raw = Object.fromEntries(styleRules(parseCss(css)).flatMap((r) => Object.entries(r.decls)));
+  const wrong = parsed.filter((t) => norm(t.value) !== norm(raw[t.name])).map((t) => `${t.name}: ${t.value}`);
+  assert.deepEqual(wrong, [], 'parser returns wrong raw values');
+  // edge cases tokens.css does not exercise today: quoted ; and }, a last declaration without ;
+  const edge = parseTokens(':root { --q: "a;b}c"; --u: url(x;y); /* --c: 1px; */ --last: 2px }');
+  assert.deepEqual(edge.map((t) => [t.name, t.value]), [['--q', '"a;b}c"'], ['--u', 'url(x;y)'], ['--last', '2px']],
+    'parser must respect strings, parentheses and comments and keep a last declaration without ;');
+  // every token lands in exactly one group; unknown ones in Other
+  const groups = groupTokens(parsed);
+  assert.deepEqual(groups.map((g) => g.title), ['Colors', 'Spacing', 'Typography', 'Radius', 'Shadow', 'Other'],
+    'token groups must be Colors, Spacing, Typography, Radius, Shadow, Other');
+  const grouped = groups.flatMap((g) => g.tokens.map((t) => t.name));
+  assert.deepEqual([...grouped].sort(), [...names].sort(), 'grouped tokens != parsed tokens (each exactly once)');
+  const groupOf = (n) => groups.find((g) => g.tokens.some((t) => t.name === n))?.title;
+  const expected = { '--gold': 'Colors', '--space-1': 'Spacing', '--fs-body': 'Typography', '--font-sans': 'Typography',
+    '--radius-none': 'Radius', '--shadow-drop': 'Shadow', '--z-toast': 'Other', '--dur': 'Other' };
+  for (const [n, g] of Object.entries(expected)) assert.equal(groupOf(n), g, `${n} belongs to ${g}`);
+  const extra = groupTokens(parseTokens(':root { /* ---------- something new ---------- */ --zz-new: 1px; }'));
+  assert.deepEqual(extra.find((g) => g.title === 'Other').tokens.map((t) => t.name), ['--zz-new'], 'unknown tokens must land in Other');
+  // the story renders from tokens.css at runtime, nothing is copied by hand
+  const story = exists('stories/tokens.stories.js') ? read('stories/tokens.stories.js') : '';
+  assert.match(story, /^import\s+\w+\s+from\s+['"]\.\.\/src\/tokens\.css\?raw['"]/m, 'tokens story must import ../src/tokens.css?raw');
+  assert.match(story, /title\s*:\s*['"]Foundations\/Tokens['"]/, 'tokens story must be titled Foundations/Tokens');
+  assert.match(story, /from\s+['"]\.\.\/\.storybook\/tokens\.mjs['"]/, 'tokens story must use the parser');
+  const hex = story.match(/#(?:[0-9a-f]{8}|[0-9a-f]{6}|[0-9a-f]{3,4})(?![\w-])/gi) || [];
+  assert.deepEqual(hex, [], 'tokens story must not hard-code colours');
+});
+
+check('17. deploy artifacts: Dockerfile, Caddyfile, docs/deploy.md; no railway config', () => {
+  assert.ok(exists('Dockerfile'), 'Dockerfile missing');
+  const docker = read('Dockerfile');
+  const stages = docker.match(/^FROM\s+\S+/gim) || [];
+  assert.ok(stages.length >= 2 && /^FROM\s+\S+\s+AS\s+\w+/im.test(docker), 'Dockerfile must be multi-stage');
+  assert.match(docker, /^RUN\s+npm ci\b/m, 'Dockerfile must install with npm ci');
+  assert.match(docker, /^RUN\s+npm run build-storybook\b/m, 'Dockerfile must run build-storybook');
+  assert.match(docker, /^COPY\s+--from=\w+\s+\S*storybook-static\b/m, 'Dockerfile must copy storybook-static from the build stage');
+  assert.match(docker, /^EXPOSE\s+8080\b/m, 'Dockerfile must EXPOSE 8080');
+  assert.match(docker, /^ENV\s+PORT=8080\b/m, 'Dockerfile must default PORT to 8080');
+  // HEALTHCHECK instruction including its continuation lines; the shell expands ${PORT:-8080} at run time
+  const health = (/^HEALTHCHECK\b(?:[^\n]*\\\n)*[^\n]*/m.exec(docker) || [''])[0];
+  assert.ok(health, 'Dockerfile has no HEALTHCHECK');
+  assert.match(health, /(?:\bsh -c\b|"sh",\s*"-c")/, 'Dockerfile HEALTHCHECK must run through sh -c');
+  assert.match(health, /http:\/\/127\.0\.0\.1:\$\{PORT:-8080\}\/(?![\w/])/, 'Dockerfile needs a HEALTHCHECK on / that honours $PORT (fallback 8080)');
+  assert.ok(exists('deploy/Caddyfile'), 'deploy/Caddyfile missing');
+  const caddy = read('deploy/Caddyfile');
+  assert.ok(caddy.includes(':{$PORT:8080}'), 'Caddyfile must listen on :{$PORT:8080}');
+  assert.match(caddy, /auto_https off/);
+  assert.match(caddy, /admin off/);
+  assert.match(caddy, /\bfile_server\b/);
+  assert.match(docker, /deploy\/Caddyfile/, 'Dockerfile must use deploy/Caddyfile');
+  assert.ok(exists('docs/deploy.md'), 'docs/deploy.md missing');
+  const doc = read('docs/deploy.md');
+  for (const [re, what] of [[/root directory/i, 'root directory'], [/Dockerfile path/i, 'Dockerfile path'], [/\$PORT/, '$PORT'],
+    [/8080/, 'port 8080'], [/health ?check/i, 'healthcheck'], [/auto-?deploy/i, 'auto-deploy'], [/`main`/, 'the main branch']]) {
+    assert.match(doc, re, `docs/deploy.md must mention ${what}`);
+  }
+  for (const f of ['railway.toml', 'railway.json']) assert.ok(!exists(f), `${f} must not exist (Config-as-Code is not used)`);
+  assert.ok(exists('.dockerignore'), '.dockerignore missing');
+  const ignore = read('.dockerignore').split('\n').map((l) => l.trim().replace(/^\/|\/$/g, ''));
+  for (const entry of ['node_modules', 'storybook-static']) assert.ok(ignore.includes(entry), `.dockerignore must exclude ${entry}`);
+});
+
 let failed = 0;
 let skipped = 0;
+(async () => {
 for (const { name, fn } of checks) {
   try {
-    fn();
+    await fn();
     console.log(`ok   ${name}`);
   } catch (err) {
     if (err instanceof Skip) {
@@ -689,3 +901,4 @@ for (const { name, fn } of checks) {
 console.log(`\n${checks.length - failed - skipped}/${checks.length} checks passed${skipped ? `, ${skipped} SKIPPED` : ''}`);
 const ci = process.env.CI === '1' || process.env.CI === 'true';
 process.exitCode = failed ? 1 : skipped && ci ? 2 : 0;
+})();
